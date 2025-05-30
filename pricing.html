@@ -580,7 +580,8 @@
         // Simple password protection
         function checkPassword() {
             const password = prompt("Enter password to access the pricing calculator:");
-            const correctPassword = "ShockingEnergy2024"; // Change this to your desired password
+            // Password is base64 encoded: "ShockingEnergy2024"
+            const correctPassword = atob("U2hvY2tpbmdFbmVyZ3kyMDI0");
             
             if (password !== correctPassword) {
                 alert("Incorrect password. Access denied.");
