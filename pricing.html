@@ -680,21 +680,21 @@
                 <div class="plan-card selected" data-plan="standard">
                     <h3 class="plan-name">Standard</h3>
                     <div class="plan-price">
-                        £<span class="price-value">20</span><small>/user/month</small>
+                        £<span class="price-value">40</span><small>/user/month</small>
                     </div>
                 </div>
 
                 <div class="plan-card" data-plan="professional">
                     <h3 class="plan-name">Professional</h3>
                     <div class="plan-price">
-                        £<span class="price-value">28</span><small>/user/month</small>
+                        £<span class="price-value">50</span><small>/user/month</small>
                     </div>
                 </div>
 
                 <div class="plan-card" data-plan="advanced">
                     <h3 class="plan-name">Premium</h3>
                     <div class="plan-price">
-                        £<span class="price-value">35</span><small>/user/month</small>
+                        £<span class="price-value">59</span><small>/user/month</small>
                     </div>
                 </div>
             </div>
@@ -1057,13 +1057,20 @@
 
         // Calculate dynamic pricing based on controls
         function calculatePlanPrices() {
-            const advancedMonthly = parseFloat(document.getElementById('advancedMonthly').value) || 59;
+            const premiumPrice = parseFloat(document.getElementById('advancedMonthly').value) || 59;
             const discount = basePricing.discounts[pricingModel];
             
+            // New formula:
+            // Professional = Premium - 15%
+            // Standard = Professional - 20%
+            const premiumFinal = Math.round(premiumPrice * discount);
+            const professionalFinal = Math.round(premiumPrice * 0.85 * discount); // 85% of premium
+            const standardFinal = Math.round(premiumPrice * 0.85 * 0.8 * discount); // 80% of professional (which is 85% of premium)
+            
             return {
-                standard: Math.round(advancedMonthly * basePricing.planRatios.standard * discount),
-                professional: Math.round(advancedMonthly * basePricing.planRatios.professional * discount),
-                advanced: Math.round(advancedMonthly * discount)
+                standard: standardFinal,
+                professional: professionalFinal,
+                advanced: premiumFinal
             };
         }
 
