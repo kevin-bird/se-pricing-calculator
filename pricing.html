@@ -1289,36 +1289,50 @@
             }
 
             const prices = calculatePlanPrices();
+            const isAnnual = pricingModel === 'annual';
+            const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
 
-            // Populate contract services
-            const services = [];
-            services.push(`${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan - ${userCount} users`);
+            // Always generate SaaS contract (since plan and platforms are required)
+            generateSaaSContract(selectedPlatformsList, prices, isAnnual, period);
+
+            // Generate SIP contract only if service is selected
+            if (selectedService) {
+                generateSIPContract();
+                document.getElementById('sipContract').style.display = 'block';
+            } else {
+                document.getElementById('sipContract').style.display = 'none';
+            }
+
+            // Show contract preview
+            document.getElementById('contractPreview').style.display = 'block';
+            document.getElementById('contractPreview').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function generateSaaSContract(selectedPlatformsList, prices, isAnnual, period) {
+            // Populate SaaS contract services (excluding SIP accreditation)
+            const saasServices = [];
+            saasServices.push(`${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan - ${userCount} users`);
             
             // Add all selected platforms
             selectedPlatformsList.forEach(([platform, tier]) => {
                 const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
-                services.push(`${platformName} Platform Access - Up to ${tier} jobs per month`);
+                saasServices.push(`${platformName} Platform Access - Up to ${tier} jobs per month`);
             });
-            
-            if (selectedService) {
-                services.push('SIP Accreditation Professional Services');
-            }
 
             document.getElementById('saasServices').innerHTML = 
-                services.map(s => `<li>${s}</li>`).join('');
+                saasServices.map(s => `<li>${s}</li>`).join('');
 
-            // Set term
-            const isAnnual = pricingModel === 'annual';
-            const term = isAnnual ? 
+            // Set SaaS term
+            const saasTerm = isAnnual ? 
                 'This agreement commences on the date above and continues for an initial period of 12 months.' :
                 'This agreement commences on the date above and continues on a rolling monthly basis.';
-            document.getElementById('saasTerm').textContent = term;
+            document.getElementById('saasTerm').textContent = saasTerm;
 
-            // Set fees
+            // Set SaaS fees (excluding professional services)
             const userPrice = prices[selectedPlan];
-            const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
             
-            let feesHTML = `
+            let saasFeesHTML = `
+                <p><strong>Monthly Recurring Charges:</strong></p>
                 <p>User Licenses: £${userPrice} per user per ${period} x ${userCount} users = £${(userPrice * userCount).toLocaleString()} per ${period}</p>
             `;
             
@@ -1328,30 +1342,65 @@
                 const { pricePerJob, total: platformCost } = calculatePlatformPrice(tier);
                 totalPlatformCost += platformCost;
                 const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
-                feesHTML += `<p>${platformName}: Up to ${tier} jobs per month at £${pricePerJob.toFixed(2)} per job = £${platformCost.toLocaleString()} per ${period}</p>`;
+                saasFeesHTML += `<p>${platformName}: Up to ${tier} jobs per month at £${pricePerJob.toFixed(2)} per job = £${platformCost.toLocaleString()} per ${period}</p>`;
             });
 
-            if (selectedService) {
-                const service = basePricing.services[selectedService];
-                if (service.months === 0) {
-                    feesHTML += `<p>Professional Services: £${service.totalCost.toLocaleString()} (paid upfront)</p>`;
-                } else {
-                    const totalServiceCost = service.monthlyRate * service.months;
-                    feesHTML += `<p>Professional Services: £${service.monthlyRate.toLocaleString()} per month for ${service.months} months = £${totalServiceCost.toLocaleString()} total</p>`;
-                }
+            const totalSaaSCost = (userPrice * userCount) + totalPlatformCost;
+            saasFeesHTML += `<p><strong>Total Monthly SaaS Fee: £${totalSaaSCost.toLocaleString()} per ${period}</strong></p>`;
+            saasFeesHTML += `<p>Payment terms: Net 30 days from invoice date.</p>`;
+
+            document.getElementById('saasFees').innerHTML = saasFeesHTML;
+
+            // Set SaaS termination clause
+            const saasTermination = isAnnual ? 
+                'Either party may terminate this agreement with 30 days written notice at the end of the initial 12-month term. Early termination fees may apply.' :
+                'Either party may terminate this agreement with 30 days written notice.';
+            document.getElementById('saasTermination').textContent = saasTermination;
+        }
+
+        function generateSIPContract() {
+            const service = basePricing.services[selectedService];
+            
+            // Set SIP package details
+            let packageDescription = '';
+            let sipFeesHTML = '';
+            
+            switch(selectedService) {
+                case 'upfront':
+                    packageDescription = 'Fast Track SIP Accreditation Package - Complete accreditation support with expedited timeline and dedicated resources.';
+                    sipFeesHTML = `
+                        <p><strong>Professional Services Fee:</strong></p>
+                        <p>SIP Accreditation Support: £${service.totalCost.toLocaleString()} (paid upfront)</p>
+                        <p>Payment terms: 100% due upon contract execution.</p>
+                        <p>This fee covers all accreditation support services for a period of up to 12 months.</p>
+                    `;
+                    break;
+                case 'three-month':
+                    packageDescription = 'Flexible SIP Accreditation Package - Structured 3-month program with monthly payments for improved cash flow.';
+                    const threeMonthTotal = service.monthlyRate * service.months;
+                    sipFeesHTML = `
+                        <p><strong>Professional Services Fee:</strong></p>
+                        <p>SIP Accreditation Support: £${service.monthlyRate.toLocaleString()} per month for ${service.months} months</p>
+                        <p><strong>Total Program Cost: £${threeMonthTotal.toLocaleString()}</strong></p>
+                        <p>Payment terms: Monthly in advance, Net 30 days from invoice date.</p>
+                        <p>First payment due upon contract execution.</p>
+                    `;
+                    break;
+                case 'six-month':
+                    packageDescription = 'Standard SIP Accreditation Package - Comprehensive 6-month program with extended support timeline and lower monthly payments.';
+                    const sixMonthTotal = service.monthlyRate * service.months;
+                    sipFeesHTML = `
+                        <p><strong>Professional Services Fee:</strong></p>
+                        <p>SIP Accreditation Support: £${service.monthlyRate.toLocaleString()} per month for ${service.months} months</p>
+                        <p><strong>Total Program Cost: £${sixMonthTotal.toLocaleString()}</strong></p>
+                        <p>Payment terms: Monthly in advance, Net 30 days from invoice date.</p>
+                        <p>First payment due upon contract execution.</p>
+                    `;
+                    break;
             }
 
-            document.getElementById('saasFees').innerHTML = feesHTML;
-
-            // Set termination clause
-            const termination = isAnnual ? 
-                'Either party may terminate this agreement with 30 days written notice at the end of the initial 12-month term.' :
-                'Either party may terminate this agreement with 30 days written notice.';
-            document.getElementById('saasTermination').textContent = termination;
-
-            // Show contract
-            document.getElementById('contractPreview').style.display = 'block';
-            document.getElementById('contractPreview').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('sipPackage').textContent = packageDescription;
+            document.getElementById('sipFees').innerHTML = sipFeesHTML;
         }
     </script>
 </body>
