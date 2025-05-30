@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="bingbot" content="noindex, nofollow">
     <title>Shocking Energy - Internal Pricing Calculator</title>
     <style>
         * {
@@ -573,6 +576,26 @@
     </style>
 </head>
 <body>
+    <script>
+        // Simple password protection
+        function checkPassword() {
+            const password = prompt("Enter password to access the pricing calculator:");
+            const correctPassword = "ShockingEnergy2024"; // Change this to your desired password
+            
+            if (password !== correctPassword) {
+                alert("Incorrect password. Access denied.");
+                document.body.innerHTML = "<h1 style='text-align: center; margin-top: 50px; color: #666;'>Access Denied</h1>";
+                return false;
+            }
+            return true;
+        }
+        
+        // Check password on page load
+        if (!checkPassword()) {
+            throw new Error("Access denied");
+        }
+    </script>
+
     <div class="header">
         <div class="container">
             <h1>Shocking Energy - Internal Pricing Calculator</h1>
