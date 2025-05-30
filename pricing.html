@@ -879,6 +879,32 @@
                 <h2 class="section-title">5. SIP Accreditation (Optional)</h2>
                 <p>SIP Accreditation Support Services</p>
                 
+                <!-- Company Details Form -->
+                <div id="companyDetailsForm" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none;">
+                    <h3 style="margin-bottom: 15px; color: #333;">Company Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Company Name:</label>
+                            <input type="text" id="companyName" placeholder="Enter company name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <button type="button" id="lookupCompany" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 25px;">
+                                Lookup Company Details
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Company Number:</label>
+                            <input type="text" id="companyNumber" placeholder="Company number" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Registered Address:</label>
+                            <textarea id="registeredAddress" placeholder="Registered address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; min-height: 60px; resize: vertical;"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
                 <div style="text-align: center; margin-bottom: 20px;">
                     <button class="btn" id="sipDiscountBtn" onclick="toggleSipDiscount()" style="background: #ff6b35; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
                         Apply 10% Discount
@@ -978,38 +1004,55 @@
             <!-- SIP Accreditation Contract -->
             <div class="contract-section-wrapper" id="sipContract" style="display: none; margin-top: 60px; page-break-before: always;">
                 <div class="contract-header">
-                    <h2>SIP ACCREDITATION SERVICES AGREEMENT</h2>
-                    <p>Between Shocking Energy Limited and <span class="companyName">[Your Company]</span></p>
-                    <p>Date: <span class="contractDate"></span></p>
+                    <h2>PROFESSIONAL SERVICES AGREEMENT</h2>
+                    <p>THIS AGREEMENT is made on <span class="contractDate"></span> (the "Effective Date") by and between:</p>
                 </div>
                 
                 <div class="contract-content">
+                    <div style="margin-bottom: 20px;">
+                        <ul style="margin-left: 20px;">
+                            <li style="margin-bottom: 10px;">
+                                <strong>Shocking Energy Limited</strong>, a company incorporated and registered in England and Wales with company number 14657873 whose registered office is at 71-75 Shelton Street, Covent Garden, London WC2H 9JQ ("Shocking Energy" or "Consultant"); and
+                            </li>
+                            <li style="margin-bottom: 10px;">
+                                <strong><span id="clientCompanyName">[Client Company Name]</span></strong>, a company incorporated and registered in England and Wales with company number <strong><span id="clientCompanyNumber">[Company Number]</span></strong> whose registered office is at <strong><span id="clientRegisteredAddress">[Registered Address]</span></strong> ("<span id="clientCompanyNameShort">[Client]</span>" or "Client").
+                            </li>
+                        </ul>
+                        <p style="margin-top: 15px;">Shocking Energy and <span id="clientCompanyNameShort2">[Client]</span> are each a "Party" and together the "Parties".</p>
+                    </div>
+
                     <div class="contract-section">
-                        <h3>1. Services</h3>
-                        <p>Shocking Energy Limited agrees to provide SIP (Safe Isolation Provider) Accreditation support services including:</p>
+                        <h3>1. Background</h3>
+                        <p style="margin-bottom: 10px;">1.1 Shocking Energy provides professional consultancy services to assist organisations in achieving Safe Isolation Provider (SIP) accreditation and meeting related regulatory requirements of the UK metering industry.</p>
+                        <p style="margin-bottom: 10px;">1.2 <span id="clientCompanyNameShort3">[Client]</span> wishes to obtain SIP accreditation and has engaged Shocking Energy to provide professional services to support that objective.</p>
+                        <p style="margin-bottom: 10px;">1.3 The Parties have agreed that Shocking Energy will perform the services set out in Schedule 1 (the "Services") for the fees described in clause 5.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>2. Engagement of Services</h3>
+                        <p style="margin-bottom: 10px;">2.1 <span id="clientCompanyNameShort4">[Client]</span> hereby engages Shocking Energy, and Shocking Energy agrees to provide the Services in accordance with the terms of this Agreement.</p>
+                        <p style="margin-bottom: 10px;">2.2 Shocking Energy shall supply all personnel, materials, know-how and expertise reasonably necessary to perform the Services.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>3. Term</h3>
+                        <p id="sipContractTerm">3.1 This Agreement commences on the Effective Date and shall continue for an initial period of 3 calendar months (the "Initial Term").</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>4. Fees & Payment</h3>
+                        <div id="sipContractFees"></div>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>5. Services Description</h3>
+                        <p>The Services include:</p>
                         <ul>
                             <li>Initial assessment and gap analysis</li>
                             <li>Documentation preparation and review</li>
                             <li>Process development and implementation support</li>
                             <li>Mock audits and preparation</li>
                             <li>Ongoing compliance support</li>
-                        </ul>
-                    </div>
-
-                    <div class="contract-section">
-                        <h3>2. Service Package</h3>
-                        <p id="sipPackage"></p>
-                    </div>
-
-                    <div class="contract-section">
-                        <h3>3. Fees & Payment</h3>
-                        <div id="sipFees"></div>
-                    </div>
-
-                    <div class="contract-section">
-                        <h3>4. Deliverables</h3>
-                        <p>The service includes:</p>
-                        <ul>
                             <li>Weekly progress meetings</li>
                             <li>Access to SIP documentation templates</li>
                             <li>Direct support from accreditation specialists</li>
@@ -1018,8 +1061,28 @@
                     </div>
 
                     <div class="contract-section">
-                        <h3>5. Terms</h3>
-                        <p>Professional services fees are non-refundable once work has commenced. The client acknowledges that accreditation success depends on their implementation of recommended processes.</p>
+                        <h3>6. Intellectual Property</h3>
+                        <p>All intellectual property rights in any materials, documents, or processes developed by Shocking Energy in the course of providing the Services shall remain the property of Shocking Energy.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>7. Confidentiality</h3>
+                        <p>Both parties agree to maintain the confidentiality of all proprietary and confidential information disclosed during the performance of this Agreement.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>8. Limitation of Liability</h3>
+                        <p>Professional services fees are non-refundable once work has commenced. The Client acknowledges that accreditation success depends on their implementation of recommended processes and procedures.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>9. Termination</h3>
+                        <p>Either party may terminate this Agreement with 30 days written notice. Upon termination, all outstanding fees become immediately due and payable.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>10. Governing Law</h3>
+                        <p>This Agreement shall be governed by and construed in accordance with the laws of England and Wales.</p>
                     </div>
                 </div>
             </div>
@@ -1218,13 +1281,27 @@
                     if (this.classList.contains('selected')) {
                         this.classList.remove('selected');
                         selectedService = null;
+                        // Hide company details form
+                        document.getElementById('companyDetailsForm').style.display = 'none';
                     } else {
                         document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
                         this.classList.add('selected');
                         selectedService = this.dataset.service;
+                        // Show company details form
+                        document.getElementById('companyDetailsForm').style.display = 'block';
                     }
                     calculateTotal();
                 });
+            });
+
+            // Company lookup functionality
+            document.getElementById('lookupCompany').addEventListener('click', function() {
+                const companyName = document.getElementById('companyName').value.trim();
+                if (!companyName) {
+                    alert('Please enter a company name first');
+                    return;
+                }
+                lookupCompanyDetails(companyName);
             });
 
             // Set default date
@@ -1349,6 +1426,18 @@
                 return;
             }
 
+            // Check if SIP service is selected and company details are provided
+            if (selectedService) {
+                const companyName = document.getElementById('companyName').value.trim();
+                const companyNumber = document.getElementById('companyNumber').value.trim();
+                const registeredAddress = document.getElementById('registeredAddress').value.trim();
+                
+                if (!companyName || !companyNumber || !registeredAddress) {
+                    alert('Please provide complete company details (name, number, and registered address) for the SIP accreditation contract');
+                    return;
+                }
+            }
+
             const prices = calculatePlanPrices();
             const isAnnual = pricingModel === 'annual';
             const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
@@ -1422,9 +1511,25 @@
         function generateSIPContract() {
             const service = basePricing.services[selectedService];
             
-            // Set SIP package details
-            let packageDescription = '';
-            let sipFeesHTML = '';
+            // Get company details
+            const companyName = document.getElementById('companyName').value.trim() || '[Client Company Name]';
+            const companyNumber = document.getElementById('companyNumber').value.trim() || '[Company Number]';
+            const registeredAddress = document.getElementById('registeredAddress').value.trim() || '[Registered Address]';
+            
+            // Populate company details in contract
+            document.querySelectorAll('#clientCompanyName').forEach(el => el.textContent = companyName);
+            document.querySelectorAll('#clientCompanyNumber').forEach(el => el.textContent = companyNumber);
+            document.querySelectorAll('#clientRegisteredAddress').forEach(el => el.textContent = registeredAddress);
+            
+            // Set short company name (first word or full name if single word)
+            const shortName = companyName.split(' ')[0];
+            document.querySelectorAll('#clientCompanyNameShort, #clientCompanyNameShort2, #clientCompanyNameShort3, #clientCompanyNameShort4').forEach(el => {
+                el.textContent = shortName;
+            });
+            
+            // Set contract term based on service type
+            let termText = '';
+            let feesHTML = '';
             
             // Apply discount if enabled
             const discountMultiplier = sipDiscountApplied ? 0.9 : 1;
@@ -1432,43 +1537,101 @@
             
             switch(selectedService) {
                 case 'upfront':
-                    packageDescription = 'Up Front SIP Accreditation Package - Complete accreditation support with expedited timeline and dedicated resources.';
+                    termText = '3.1 This Agreement commences on the Effective Date and shall continue for an initial period of 12 months (the "Initial Term").';
                     const upfrontCost = Math.round(service.totalCost * discountMultiplier);
-                    sipFeesHTML = `
-                        <p><strong>Professional Services Fee:</strong></p>
-                        <p>SIP Accreditation Support: £${upfrontCost.toLocaleString()} (paid upfront)${discountText}</p>
-                        <p>Payment terms: 100% due upon contract execution.</p>
-                        <p>This fee covers all accreditation support services for a period of up to 12 months.</p>
+                    feesHTML = `
+                        <p><strong>4.1 Professional Services Fee:</strong></p>
+                        <p>The total fee for the Services is £${upfrontCost.toLocaleString()}${discountText}, payable in full upon execution of this Agreement.</p>
+                        <p><strong>4.2 Payment Terms:</strong> Payment is due within 7 days of the Effective Date.</p>
+                        <p><strong>4.3 Coverage:</strong> This fee covers all accreditation support services for a period of up to 12 months from the Effective Date.</p>
                     `;
                     break;
                 case 'three-month':
-                    packageDescription = 'Flexible SIP Accreditation Package - Structured 3-month program with monthly payments for improved cash flow.';
+                    termText = '3.1 This Agreement commences on the Effective Date and shall continue for an initial period of 3 calendar months (the "Initial Term").';
                     const threeMonthRate = Math.round(service.monthlyRate * discountMultiplier);
                     const threeMonthTotal = threeMonthRate * service.months;
-                    sipFeesHTML = `
-                        <p><strong>Professional Services Fee:</strong></p>
-                        <p>SIP Accreditation Support: £${threeMonthRate.toLocaleString()} per month for ${service.months} months${discountText}</p>
-                        <p><strong>Total Program Cost: £${threeMonthTotal.toLocaleString()}</strong></p>
-                        <p>Payment terms: Monthly in advance, Net 30 days from invoice date.</p>
-                        <p>First payment due upon contract execution.</p>
+                    feesHTML = `
+                        <p><strong>4.1 Professional Services Fee:</strong></p>
+                        <p>The monthly fee for the Services is £${threeMonthRate.toLocaleString()} per month${discountText}.</p>
+                        <p><strong>4.2 Total Program Cost:</strong> £${threeMonthTotal.toLocaleString()} over ${service.months} months.</p>
+                        <p><strong>4.3 Payment Terms:</strong> Monthly fees are payable in advance by the first day of each calendar month. The first payment is due within 7 days of the Effective Date.</p>
                     `;
                     break;
                 case 'six-month':
-                    packageDescription = 'Standard SIP Accreditation Package - Comprehensive 6-month program with extended support timeline and lower monthly payments.';
+                    termText = '3.1 This Agreement commences on the Effective Date and shall continue for an initial period of 6 calendar months (the "Initial Term").';
                     const sixMonthRate = Math.round(service.monthlyRate * discountMultiplier);
                     const sixMonthTotal = sixMonthRate * service.months;
-                    sipFeesHTML = `
-                        <p><strong>Professional Services Fee:</strong></p>
-                        <p>SIP Accreditation Support: £${sixMonthRate.toLocaleString()} per month for ${service.months} months${discountText}</p>
-                        <p><strong>Total Program Cost: £${sixMonthTotal.toLocaleString()}</strong></p>
-                        <p>Payment terms: Monthly in advance, Net 30 days from invoice date.</p>
-                        <p>First payment due upon contract execution.</p>
+                    feesHTML = `
+                        <p><strong>4.1 Professional Services Fee:</strong></p>
+                        <p>The monthly fee for the Services is £${sixMonthRate.toLocaleString()} per month${discountText}.</p>
+                        <p><strong>4.2 Total Program Cost:</strong> £${sixMonthTotal.toLocaleString()} over ${service.months} months.</p>
+                        <p><strong>4.3 Payment Terms:</strong> Monthly fees are payable in advance by the first day of each calendar month. The first payment is due within 7 days of the Effective Date.</p>
                     `;
                     break;
             }
 
-            document.getElementById('sipPackage').textContent = packageDescription;
-            document.getElementById('sipFees').innerHTML = sipFeesHTML;
+            document.getElementById('sipContractTerm').textContent = termText;
+            document.getElementById('sipContractFees').innerHTML = feesHTML;
+        }
+
+        // Company lookup function using Companies House API
+        async function lookupCompanyDetails(companyName) {
+            try {
+                // Show loading state
+                const button = document.getElementById('lookupCompany');
+                const originalText = button.textContent;
+                button.textContent = 'Looking up...';
+                button.disabled = true;
+
+                // Note: Companies House API requires API key and has CORS restrictions
+                // For demo purposes, we'll use a free proxy service or implement a simple search
+                // In production, this should be done through your backend service
+
+                // Using a public API (note: this may have limitations)
+                const response = await fetch(`https://api.company-information.service.gov.uk/search/companies?q=${encodeURIComponent(companyName)}&items_per_page=1`, {
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('your-api-key:'), // You need to add your Companies House API key
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Company lookup service unavailable');
+                }
+
+                const data = await response.json();
+                
+                if (data.items && data.items.length > 0) {
+                    const company = data.items[0];
+                    
+                    // Populate company details
+                    document.getElementById('companyNumber').value = company.company_number || '';
+                    
+                    // Format address
+                    const address = company.address;
+                    const addressParts = [];
+                    if (address.premises) addressParts.push(address.premises);
+                    if (address.address_line_1) addressParts.push(address.address_line_1);
+                    if (address.address_line_2) addressParts.push(address.address_line_2);
+                    if (address.locality) addressParts.push(address.locality);
+                    if (address.region) addressParts.push(address.region);
+                    if (address.postal_code) addressParts.push(address.postal_code);
+                    if (address.country) addressParts.push(address.country);
+                    
+                    document.getElementById('registeredAddress').value = addressParts.join(', ');
+                    
+                    alert('Company details found and populated!');
+                } else {
+                    alert('No company found with that name. Please enter details manually.');
+                }
+            } catch (error) {
+                console.error('Company lookup error:', error);
+                alert('Company lookup failed. Please enter details manually.\n\nNote: This feature requires a Companies House API key for full functionality.');
+            } finally {
+                // Reset button state
+                const button = document.getElementById('lookupCompany');
+                button.textContent = originalText;
+                button.disabled = false;
+            }
         }
 
         function toggleSipDiscount() {
