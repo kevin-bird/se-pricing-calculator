@@ -854,23 +854,45 @@
             <div class="professional-services">
                 <h2 class="section-title">5. SIP Accreditation (Optional)</h2>
                 <p>SIP Accreditation Support Services</p>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn" id="sipDiscountBtn" onclick="toggleSipDiscount()" style="background: #ff6b35; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
+                        Apply 10% Discount
+                    </button>
+                </div>
+                
                 <div class="service-options">
                     <div class="service-card" data-service="upfront" data-months="0">
                         <h4>Up Front</h4>
-                        <div class="service-price">£15,000</div>
+                        <div class="service-price">
+                            <span class="original-price">£15,000</span>
+                            <span class="discounted-price" style="display: none;">£13,500</span>
+                        </div>
                         <div>Paid upfront</div>
                     </div>
                     <div class="service-card" data-service="three-month" data-months="3">
                         <h4>Flexible</h4>
-                        <div class="service-price">£5,500</div>
+                        <div class="service-price">
+                            <span class="original-price">£5,500</span>
+                            <span class="discounted-price" style="display: none;">£4,950</span>
+                        </div>
                         <div class="service-monthly">per month for 3 months</div>
-                        <div>Total: £16,500</div>
+                        <div class="service-total">
+                            <span class="original-total">Total: £16,500</span>
+                            <span class="discounted-total" style="display: none;">Total: £14,850</span>
+                        </div>
                     </div>
                     <div class="service-card" data-service="six-month" data-months="6">
                         <h4>Standard</h4>
-                        <div class="service-price">£3,000</div>
+                        <div class="service-price">
+                            <span class="original-price">£3,000</span>
+                            <span class="discounted-price" style="display: none;">£2,700</span>
+                        </div>
                         <div class="service-monthly">per month for 6 months</div>
-                        <div>Total: £18,000</div>
+                        <div class="service-total">
+                            <span class="original-total">Total: £18,000</span>
+                            <span class="discounted-total" style="display: none;">Total: £16,200</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1007,6 +1029,7 @@
         let selectedService = null;
         let pricingModel = 'payg'; // Default to pay as you go
         let userCount = 5;
+        let sipDiscountApplied = false; // Track SIP discount state
 
         // Calculate dynamic pricing based on controls
         function calculatePlanPrices() {
@@ -1239,6 +1262,11 @@
                     serviceCost = service.monthlyRate;
                     serviceMonths = service.months;
                 }
+                
+                // Apply 10% discount if enabled
+                if (sipDiscountApplied) {
+                    serviceCost = serviceCost * 0.9;
+                }
             }
 
             // Update display
@@ -1367,22 +1395,28 @@
             let packageDescription = '';
             let sipFeesHTML = '';
             
+            // Apply discount if enabled
+            const discountMultiplier = sipDiscountApplied ? 0.9 : 1;
+            const discountText = sipDiscountApplied ? ' (10% discount applied)' : '';
+            
             switch(selectedService) {
                 case 'upfront':
                     packageDescription = 'Up Front SIP Accreditation Package - Complete accreditation support with expedited timeline and dedicated resources.';
+                    const upfrontCost = Math.round(service.totalCost * discountMultiplier);
                     sipFeesHTML = `
                         <p><strong>Professional Services Fee:</strong></p>
-                        <p>SIP Accreditation Support: £${service.totalCost.toLocaleString()} (paid upfront)</p>
+                        <p>SIP Accreditation Support: £${upfrontCost.toLocaleString()} (paid upfront)${discountText}</p>
                         <p>Payment terms: 100% due upon contract execution.</p>
                         <p>This fee covers all accreditation support services for a period of up to 12 months.</p>
                     `;
                     break;
                 case 'three-month':
                     packageDescription = 'Flexible SIP Accreditation Package - Structured 3-month program with monthly payments for improved cash flow.';
-                    const threeMonthTotal = service.monthlyRate * service.months;
+                    const threeMonthRate = Math.round(service.monthlyRate * discountMultiplier);
+                    const threeMonthTotal = threeMonthRate * service.months;
                     sipFeesHTML = `
                         <p><strong>Professional Services Fee:</strong></p>
-                        <p>SIP Accreditation Support: £${service.monthlyRate.toLocaleString()} per month for ${service.months} months</p>
+                        <p>SIP Accreditation Support: £${threeMonthRate.toLocaleString()} per month for ${service.months} months${discountText}</p>
                         <p><strong>Total Program Cost: £${threeMonthTotal.toLocaleString()}</strong></p>
                         <p>Payment terms: Monthly in advance, Net 30 days from invoice date.</p>
                         <p>First payment due upon contract execution.</p>
@@ -1390,10 +1424,11 @@
                     break;
                 case 'six-month':
                     packageDescription = 'Standard SIP Accreditation Package - Comprehensive 6-month program with extended support timeline and lower monthly payments.';
-                    const sixMonthTotal = service.monthlyRate * service.months;
+                    const sixMonthRate = Math.round(service.monthlyRate * discountMultiplier);
+                    const sixMonthTotal = sixMonthRate * service.months;
                     sipFeesHTML = `
                         <p><strong>Professional Services Fee:</strong></p>
-                        <p>SIP Accreditation Support: £${service.monthlyRate.toLocaleString()} per month for ${service.months} months</p>
+                        <p>SIP Accreditation Support: £${sixMonthRate.toLocaleString()} per month for ${service.months} months${discountText}</p>
                         <p><strong>Total Program Cost: £${sixMonthTotal.toLocaleString()}</strong></p>
                         <p>Payment terms: Monthly in advance, Net 30 days from invoice date.</p>
                         <p>First payment due upon contract execution.</p>
@@ -1403,6 +1438,37 @@
 
             document.getElementById('sipPackage').textContent = packageDescription;
             document.getElementById('sipFees').innerHTML = sipFeesHTML;
+        }
+
+        function toggleSipDiscount() {
+            const btn = document.getElementById('sipDiscountBtn');
+            const originalPrices = document.querySelectorAll('.original-price');
+            const discountedPrices = document.querySelectorAll('.discounted-price');
+            const originalTotals = document.querySelectorAll('.original-total');
+            const discountedTotals = document.querySelectorAll('.discounted-total');
+
+            sipDiscountApplied = !sipDiscountApplied;
+
+            if (sipDiscountApplied) {
+                // Show discounted prices, hide original
+                originalPrices.forEach(price => price.style.display = 'none');
+                discountedPrices.forEach(price => price.style.display = 'inline');
+                originalTotals.forEach(total => total.style.display = 'none');
+                discountedTotals.forEach(total => total.style.display = 'inline');
+                btn.textContent = 'Remove 10% Discount';
+                btn.style.background = '#28a745';
+            } else {
+                // Show original prices, hide discounted
+                originalPrices.forEach(price => price.style.display = 'inline');
+                discountedPrices.forEach(price => price.style.display = 'none');
+                originalTotals.forEach(total => total.style.display = 'inline');
+                discountedTotals.forEach(total => total.style.display = 'none');
+                btn.textContent = 'Apply 10% Discount';
+                btn.style.background = '#ff6b35';
+            }
+
+            // Recalculate total to reflect discount
+            calculateTotal();
         }
     </script>
 </body>
