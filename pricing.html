@@ -617,6 +617,10 @@
                 <span id="platformCost">£0</span>
             </div>
             <div class="price-line">
+                <span>Setup Fee:</span>
+                <span id="setupCost">£0</span>
+            </div>
+            <div class="price-line">
                 <span>Professional Services:</span>
                 <span id="serviceCost">£0</span>
             </div>
@@ -637,6 +641,10 @@
             <div class="control-item">
                 <label>Cost per Job (Monthly) £</label>
                 <input type="number" id="baseJobCost" value="5" min="0" step="1">
+            </div>
+            <div class="control-item">
+                <label>Platform Setup Fee £</label>
+                <input type="number" id="setupFee" value="2000" min="0" step="100">
             </div>
         </div>
 
@@ -1137,13 +1145,6 @@
                                 <p>Name: Kevin Bird</p>
                                 <p>Title: Director</p>
                                 <p>Date: _________________</p>
-                                <br>
-                                <p><strong>Witness:</strong></p>
-                                <br>
-                                <p>_________________________________</p>
-                                <p>Name: _________________</p>
-                                <p>Address: _________________</p>
-                                <p>_________________________</p>
                             </div>
                             <div>
                                 <p><strong>For and on behalf of <span class="companyName">[Client]</span>:</strong></p>
@@ -1152,13 +1153,6 @@
                                 <p>Name: _________________</p>
                                 <p>Title: _________________</p>
                                 <p>Date: _________________</p>
-                                <br>
-                                <p><strong>Witness:</strong></p>
-                                <br>
-                                <p>_________________________________</p>
-                                <p>Name: _________________</p>
-                                <p>Address: _________________</p>
-                                <p>_________________________</p>
                             </div>
                         </div>
                     </div>
@@ -1408,13 +1402,6 @@
                                 <p>Name: Kevin Bird</p>
                                 <p>Title: Director</p>
                                 <p>Date: _________________</p>
-                                <br>
-                                <p><strong>Witness:</strong></p>
-                                <br>
-                                <p>_________________________________</p>
-                                <p>Name: _________________</p>
-                                <p>Address: _________________</p>
-                                <p>_________________________</p>
                             </div>
                             <div>
                                 <p><strong>For and on behalf of <span class="companyName">[Client]</span>:</strong></p>
@@ -1423,13 +1410,6 @@
                                 <p>Name: _________________</p>
                                 <p>Title: _________________</p>
                                 <p>Date: _________________</p>
-                                <br>
-                                <p><strong>Witness:</strong></p>
-                                <br>
-                                <p>_________________________________</p>
-                                <p>Name: _________________</p>
-                                <p>Address: _________________</p>
-                                <p>_________________________</p>
                             </div>
                         </div>
                     </div>
@@ -1567,6 +1547,10 @@
 
             document.getElementById('advancedMonthly').addEventListener('input', function() {
                 updatePrices();
+                calculateTotal();
+            });
+            
+            document.getElementById('setupFee').addEventListener('input', function() {
                 calculateTotal();
             });
 
@@ -1710,6 +1694,7 @@
             let platformCost = 0;
             let serviceCost = 0;
             let serviceMonths = 0;
+            let setupFee = parseFloat(document.getElementById('setupFee').value) || 0;
 
             const prices = calculatePlanPrices();
 
@@ -1750,6 +1735,7 @@
             const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
             document.getElementById('userCost').textContent = userCost ? `£${userCost.toLocaleString()}/${period}` : '£0';
             document.getElementById('platformCost').textContent = platformCost ? `£${platformCost.toLocaleString()}/${period}` : '£0';
+            document.getElementById('setupCost').textContent = setupFee ? `£${setupFee.toLocaleString()} (one-time)` : '£0';
             
             // Professional services display
             if (serviceCost) {
@@ -1765,20 +1751,18 @@
             const recurringTotal = userCost + platformCost;
             let totalDisplay = '£0';
             
-            if (recurringTotal > 0 || serviceCost > 0) {
-                if (recurringTotal > 0 && serviceCost > 0) {
+            if (recurringTotal > 0 || serviceCost > 0 || setupFee > 0) {
+                totalDisplay = `£${recurringTotal.toLocaleString()}/${period}`;
+                
+                if (setupFee > 0) {
+                    totalDisplay += `<br>+ £${setupFee.toLocaleString()} setup`;
+                }
+                
+                if (serviceCost > 0) {
                     if (serviceMonths === 0) {
-                        totalDisplay = `£${recurringTotal.toLocaleString()}/${period}<br>+ £${serviceCost.toLocaleString()} (upfront)`;
+                        totalDisplay += `<br>+ £${serviceCost.toLocaleString()} (SIP support)`;
                     } else {
-                        totalDisplay = `£${recurringTotal.toLocaleString()}/${period}<br>+ £${serviceCost.toLocaleString()}/month (${serviceMonths} months)`;
-                    }
-                } else if (recurringTotal > 0) {
-                    totalDisplay = `£${recurringTotal.toLocaleString()}/${period}`;
-                } else {
-                    if (serviceMonths === 0) {
-                        totalDisplay = `£${serviceCost.toLocaleString()} (upfront)`;
-                    } else {
-                        totalDisplay = `£${serviceCost.toLocaleString()}/month (${serviceMonths} months)`;
+                        totalDisplay += `<br>+ £${serviceCost.toLocaleString()}/month (${serviceMonths}m SIP)`;
                     }
                 }
             }
@@ -1962,6 +1946,13 @@
                 
                 saasFeesHTML += `</ul>`;
             }
+            
+            // Add setup fee if applicable
+            const setupFee = parseFloat(document.getElementById('setupFee').value) || 0;
+            if (setupFee > 0) {
+                saasFeesHTML += `<h4>3.6 Setup Fee</h4>`;
+                saasFeesHTML += `<p>A one-time platform setup fee of £${setupFee.toLocaleString()} is payable upon contract signature.</p>`;
+            }
 
             document.getElementById('saasFees').innerHTML = saasFeesHTML;
 
@@ -2116,296 +2107,143 @@
             const prices = calculatePlanPrices();
             const userPrice = prices[selectedPlan];
             const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
+            const setupFee = parseFloat(document.getElementById('setupFee').value) || 0;
             
             // Calculate total costs
             let totalPlatformCost = 0;
+            const platformDetails = [];
             selectedPlatformsList.forEach(([platform, tier]) => {
-                const { total: platformCost } = calculatePlatformPrice(tier);
+                const { pricePerJob, total: platformCost } = calculatePlatformPrice(tier);
                 totalPlatformCost += platformCost;
+                const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
+                platformDetails.push({
+                    name: platformName,
+                    tier: tier,
+                    pricePerJob: pricePerJob,
+                    totalCost: platformCost
+                });
             });
             
             const totalSaaSCost = (userPrice * userCount) + totalPlatformCost;
             
-            // Build HTML formatted email content
+            // Build casual email content
             let emailContent = `<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-<p>Dear ${companyName} Team,</p>
+<p><strong>Subject: Shocking Energy Platform - Proposal and Agreement</strong></p>
 
-<p>Thank you for your interest in the Shocking Energy platform. Following our discussions, I'm pleased to provide you with a comprehensive proposal for our ${selectedService ? 'SIP accreditation support and software platform services' : 'industry-leading software platform'}.</p>`;
+<p>Hi ${companyName} Team,</p>
 
-            // Add SIP accreditation first if selected
+<p>Following our discussions about the Shocking Energy platform, I wanted to send over the pricing details we talked about.</p>`;
+
+            // Add SIP accreditation section if selected
             if (selectedService) {
                 const service = basePricing.services[selectedService];
                 const discountMultiplier = sipDiscountApplied ? 0.9 : 1;
-                const discountText = sipDiscountApplied ? ' (10% discount applied)' : '';
                 
                 emailContent += `
-<div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
-    <h2 style="color: #2c3e50; margin-top: 0;">🏆 SIP ACCREDITATION SUPPORT PROGRAMME</h2>
-    
-    <p><strong>Comprehensive support to achieve your Safe Isolation Provider accreditation</strong></p>
-    
-    <h3 style="color: #34495e;">Selected Package: ${selectedService === 'upfront' ? 'Upfront Payment' : selectedService === 'three-month' ? 'Flexible 3-Month' : 'Standard 6-Month'}</h3>`;
+<p><strong>SIP Accreditation Support:</strong></p>
+
+<p>First, regarding the SIP accreditation - we have a few options for the support programme:</p>
+<ul>`;
                 
-                if (selectedService === 'upfront') {
-                    const cost = Math.round(service.totalCost * discountMultiplier);
-                    emailContent += `
-    <p style="font-size: 18px; color: #27ae60;"><strong>Investment: £${cost.toLocaleString()}${discountText}</strong><br>
-    <span style="font-size: 14px;">One-time payment covering full 12-month support programme</span></p>`;
-                } else {
-                    const monthlyRate = Math.round(service.monthlyRate * discountMultiplier);
-                    const total = monthlyRate * service.months;
-                    emailContent += `
-    <p style="font-size: 18px; color: #27ae60;"><strong>Investment: £${monthlyRate.toLocaleString()}/month for ${service.months} months${discountText}</strong><br>
-    <span style="font-size: 14px;">Total programme cost: £${total.toLocaleString()}</span></p>`;
-                }
+                // Show all options
+                const upfrontCost = Math.round(15000 * discountMultiplier);
+                const threeMonthRate = Math.round(5500 * discountMultiplier);
+                const sixMonthRate = Math.round(3000 * discountMultiplier);
                 
-                emailContent += `
-    <h4 style="color: #34495e;">What's Included:</h4>
-    <ul style="margin-left: 20px;">
-        <li><strong>Initial Assessment & Gap Analysis</strong> - Complete review of your current processes with detailed findings report</li>
-        <li><strong>Documentation Suite</strong> - All policies, procedures, and templates required for accreditation</li>
-        <li><strong>Implementation Support</strong> - Hands-on guidance to embed new processes into your operations</li>
-        <li><strong>Comprehensive Training</strong> - Full team training on SIP requirements and best practices</li>
-        <li><strong>Mock Audits</strong> - Practice audits to ensure you're ready for the real assessment</li>
-        <li><strong>Ongoing Support</strong> - Weekly meetings, email/phone support, and regulatory updates</li>
-    </ul>
-    
-    <h4 style="color: #34495e;">Alternative Payment Options Available:</h4>
-    <ul style="margin-left: 20px;">`;
+                emailContent += `<li>Upfront payment: £${upfrontCost.toLocaleString()} (best value - covers full 12 months)</li>`;
+                emailContent += `<li>3-month plan: £${threeMonthRate.toLocaleString()}/month (total: £${(threeMonthRate * 3).toLocaleString()})</li>`;
+                emailContent += `<li>6-month plan: £${sixMonthRate.toLocaleString()}/month (total: £${(sixMonthRate * 6).toLocaleString()})</li>`;
                 
-                if (selectedService !== 'upfront') {
-                    emailContent += `<li><strong>Upfront Payment:</strong> £${Math.round(15000 * discountMultiplier).toLocaleString()} (save on total cost)</li>`;
-                }
-                if (selectedService !== 'three-month') {
-                    emailContent += `<li><strong>3-Month Plan:</strong> £${Math.round(5500 * discountMultiplier).toLocaleString()}/month</li>`;
-                }
-                if (selectedService !== 'six-month') {
-                    emailContent += `<li><strong>6-Month Plan:</strong> £${Math.round(3000 * discountMultiplier).toLocaleString()}/month</li>`;
-                }
-                
-                emailContent += `
-    </ul>
-</div>`;
+                emailContent += `</ul>
+<p>This includes everything you need for accreditation - gap analysis, documentation, training, mock audits, and ongoing support throughout the process.</p>
+`;
             }
 
-            // Add software platform section
             emailContent += `
-<div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-    <h2 style="color: #2c3e50; margin-top: 0;">💻 SOFTWARE PLATFORM SUBSCRIPTION</h2>
-    
-    <h3 style="color: #34495e;">Selected Configuration:</h3>
-    
-    <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
-        <h4 style="margin-top: 0; color: #3498db;">User Licensing - ${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan</h4>
-        <ul style="margin-left: 20px;">
-            <li><strong>${userCount} User Licenses</strong> at £${userPrice}/user/${period}</li>
-            <li>Full access to web portal and mobile applications</li>
-            <li>Real-time job tracking and management</li>
-            <li>Document storage and compliance management</li>
-            <li>Comprehensive reporting and analytics</li>
-        </ul>
-        <p><strong>Billing:</strong> ${pricingModel === 'payg' ? 'Pay As You Go (monthly in arrears)' : pricingModel === 'monthly' ? 'Monthly Contract with 20% discount' : 'Annual Contract with 40% discount'}</p>
-    </div>`;
+<p><strong>Your Platform Setup:</strong></p>
 
-            // Add selected workflows with better descriptions
-            emailContent += `
-    <h3 style="color: #34495e;">Selected Workflow Modules:</h3>`;
+<p>Based on your requirements, here's what I'd recommend:</p>
 
-            selectedPlatformsList.forEach(([platform, tier]) => {
-                const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
-                const { pricePerJob, total: platformCost } = calculatePlatformPrice(tier);
-                
-                let detailedDescription = '';
-                switch(platform) {
-                    case 'sip':
-                        detailedDescription = `Complete Safe Isolation Provider workflow management including:
-                        <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>Automated market message generation and submission to Electralink</li>
-                            <li>Job scheduling and engineer allocation</li>
-                            <li>Real-time status tracking and updates</li>
-                            <li>Compliance documentation and audit trails</li>
-                            <li>Integration with industry systems</li>
-                        </ul>`;
-                        break;
-                    case 'solar':
-                        detailedDescription = `MCS certified solar installation management including:
-                        <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>End-to-end solar project workflow</li>
-                            <li>MCS compliance documentation</li>
-                            <li>Installation certificates and warranties</li>
-                            <li>Customer portal for project tracking</li>
-                            <li>Integration with DNO applications</li>
-                        </ul>`;
-                        break;
-                    case 'mam':
-                        detailedDescription = `RGMA compliant AMR meter installation management including:
-                        <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>Meter appointment scheduling and routing</li>
-                            <li>RGMA compliance tracking</li>
-                            <li>Installation evidence capture</li>
-                            <li>Automated completion reporting</li>
-                            <li>Stock management integration</li>
-                        </ul>`;
-                        break;
-                    case 'electrical':
-                        detailedDescription = `Comprehensive electrical installation management including:
-                        <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>Digital electrical certificates (EICR, EIC, MW)</li>
-                            <li>Part P notification management</li>
-                            <li>Testing results and documentation</li>
-                            <li>Remedial work tracking</li>
-                            <li>Compliance reporting suite</li>
-                        </ul>`;
-                        break;
-                    case 'telecoms':
-                        detailedDescription = `Telecoms installation workflow management including:
-                        <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>Site survey and planning tools</li>
-                            <li>Installation scheduling and tracking</li>
-                            <li>Quality assurance checklists</li>
-                            <li>Customer sign-off capture</li>
-                            <li>SIP workflow integration where required</li>
-                        </ul>`;
-                        break;
-                    case 'ev':
-                        detailedDescription = `EV charger installation management with Jumptech integration:
-                        <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>End-to-end EV charger workflow</li>
-                            <li>Jumptech platform integration</li>
-                            <li>DNO application management</li>
-                            <li>Installation certificates and warranties</li>
-                            <li>OZEV grant claim support</li>
-                        </ul>`;
-                        break;
+<ul>
+<li><strong>${userCount} ${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} user licenses</strong> at £${userPrice}/user/${period} - this gives your team full access to our web portal and mobile apps</li>`;
+
+            // Add platform details
+            platformDetails.forEach(platform => {
+                let description = '';
+                if (platform.name.toLowerCase().includes('sip')) {
+                    description = 'for managing Safe Isolation Provider jobs';
+                } else if (platform.name.toLowerCase().includes('solar')) {
+                    description = 'for MCS certified solar installations';
+                } else if (platform.name.toLowerCase().includes('amr')) {
+                    description = 'for RGMA compliant meter installations';
+                } else if (platform.name.toLowerCase().includes('electrical')) {
+                    description = 'for electrical certificates and compliance';
+                } else if (platform.name.toLowerCase().includes('telecoms')) {
+                    description = 'for telecoms installation management';
+                } else if (platform.name.toLowerCase().includes('ev')) {
+                    description = 'for EV charger installations with Jumptech';
                 }
                 
                 emailContent += `
-    <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
-        <h4 style="margin-top: 0; color: #3498db;">${platformName}</h4>
-        <p>${detailedDescription}</p>
-        <p><strong>Volume:</strong> Up to ${tier} jobs per month<br>
-        <strong>Rate:</strong> £${pricePerJob.toFixed(2)} per job<br>
-        <strong>Monthly Cost:</strong> £${platformCost.toLocaleString()}</p>
-    </div>`;
+<li><strong>${platform.name} module</strong> ${description} - handles up to ${platform.tier} jobs/month at £${platform.pricePerJob.toFixed(2)} per job</li>`;
             });
 
-            emailContent += `</div>`;
+            emailContent += `</ul>`;
+            
+            if (setupFee > 0) {
+                emailContent += `
+<p>There's also a one-time setup fee of <strong>£${setupFee.toLocaleString()}</strong> to get your platform configured and your team onboarded.</p>`;
+            }
+
+            // Add note about users
+            emailContent += `
+<p>Just to clarify - both back office users and engineers need a platform license.</p>`;
 
             // Add pricing summary
             emailContent += `
-<div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-    <h2 style="color: #2c3e50; margin-top: 0;">💰 PRICING SUMMARY</h2>
-    
-    <table style="width: 100%; border-collapse: collapse;">
-        <tr>
-            <td style="padding: 10px; border-bottom: 1px solid #ddd;"><strong>User Licenses (${userCount} users)</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right;">£${(userPrice * userCount).toLocaleString()}/${period}</td>
-        </tr>`;
-
-            selectedPlatformsList.forEach(([platform, tier]) => {
-                const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
-                const { total: platformCost } = calculatePlatformPrice(tier);
-                emailContent += `
-        <tr>
-            <td style="padding: 10px; border-bottom: 1px solid #ddd;"><strong>${platformName}</strong></td>
-            <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right;">£${platformCost.toLocaleString()}/${period}</td>
-        </tr>`;
-            });
-
-            emailContent += `
-        <tr>
-            <td style="padding: 10px; font-size: 18px;"><strong>Total Platform Fee</strong></td>
-            <td style="padding: 10px; font-size: 18px; text-align: right; color: #27ae60;"><strong>£${totalSaaSCost.toLocaleString()}/${period}</strong></td>
-        </tr>`;
+<p>This brings your total monthly investment to <strong>£${totalSaaSCost.toLocaleString()}</strong> `;
             
-            if (pricingModel === 'annual') {
-                emailContent += `
-        <tr>
-            <td style="padding: 10px; font-size: 16px;"><strong>Annual Total</strong></td>
-            <td style="padding: 10px; font-size: 16px; text-align: right;"><strong>£${(totalSaaSCost * 12).toLocaleString()}</strong></td>
-        </tr>`;
-            }
-
-            // Add SIP accreditation to summary if selected
-            if (selectedService) {
-                const service = basePricing.services[selectedService];
-                const discountMultiplier = sipDiscountApplied ? 0.9 : 1;
-                
-                emailContent += `
-        <tr style="background: #f0f8ff;">
-            <td style="padding: 10px; font-size: 16px;"><strong>SIP Accreditation Support</strong></td>
-            <td style="padding: 10px; font-size: 16px; text-align: right;">`;
-                
-                if (selectedService === 'upfront') {
-                    emailContent += `<strong>£${Math.round(service.totalCost * discountMultiplier).toLocaleString()} (one-time)</strong>`;
+            // Break down the calculation
+            emailContent += `(£${(userPrice * userCount).toLocaleString()} for users`;
+            platformDetails.forEach((platform, index) => {
+                if (index === 0) {
+                    emailContent += ` + £${platform.totalCost.toLocaleString()} for ${platform.name}`;
                 } else {
-                    emailContent += `<strong>£${Math.round(service.monthlyRate * discountMultiplier).toLocaleString()}/month (${service.months} months)</strong>`;
+                    emailContent += ` + £${platform.totalCost.toLocaleString()}`;
                 }
-                
-                emailContent += `</td>
-        </tr>`;
+            });
+            emailContent += `)`;
+            
+            if (setupFee > 0) {
+                emailContent += `, plus the £${setupFee.toLocaleString()} setup fee.`;
+            } else {
+                emailContent += `.`;
+            }
+            emailContent += `</p>`;
+
+            if (pricingModel === 'annual') {
+                emailContent += `<p>With annual billing, that's <strong>£${(totalSaaSCost * 12).toLocaleString()}/year</strong>.</p>`;
             }
 
             emailContent += `
-    </table>
-</div>`;
+<p><strong>What's Included:</strong></p>
 
-            // Add key benefits section
-            emailContent += `
-<div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-    <h2 style="color: #2c3e50; margin-top: 0;">🌟 KEY BENEFITS</h2>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <div>
-            <h4 style="color: #34495e;">Platform Features:</h4>
-            <ul style="margin-left: 20px;">
-                <li>Industry-leading job management system</li>
-                <li>Real-time visibility across all operations</li>
-                <li>Mobile app for field engineers</li>
-                <li>Automated compliance tracking</li>
-                <li>Comprehensive reporting suite</li>
-            </ul>
-        </div>
-        <div>
-            <h4 style="color: #34495e;">Support & Service:</h4>
-            <ul style="margin-left: 20px;">
-                <li>UK-based support team</li>
-                <li>Regular platform updates</li>
-                <li>Training and onboarding included</li>
-                <li>99.5% platform uptime SLA</li>
-                <li>Data security and GDPR compliance</li>
-            </ul>
-        </div>
-    </div>
-</div>`;
+<p>The platform handles your job management end-to-end - automated submissions to Electralink, real-time tracking, and all your compliance documentation. Your field engineers can update jobs on the go using our mobile app, and you'll have complete visibility across all operations.</p>
 
-            // Add next steps
-            emailContent += `
-<div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-    <h2 style="color: #2c3e50; margin-top: 0;">📋 NEXT STEPS</h2>
-    
-    <ol style="margin-left: 20px;">
-        <li><strong>Review the attached contract(s)</strong> - Please review the terms and conditions carefully</li>
-        <li><strong>Sign and return</strong> - Execute the agreements and return to us</li>
-        <li><strong>Onboarding scheduled</strong> - We'll arrange your onboarding session within 24 hours</li>
-        <li><strong>Platform access provided</strong> - Your team will receive login credentials</li>
-        <li><strong>Go live!</strong> - Start transforming your operations immediately</li>
-    </ol>
-</div>`;
+<p>You'll also get full UK-based support with 99.5% uptime guarantee, plus training and onboarding included. We'll have you up and running within 24 hours of signing.</p>
 
-            emailContent += `
-<p>I've attached the formal agreement(s) for your review. Please don't hesitate to contact me if you have any questions or would like to discuss any aspect of this proposal.</p>
+<p><strong>Next Steps:</strong></p>
 
-<p>I look forward to welcoming ${companyName} to the Shocking Energy platform and ${selectedService ? 'supporting your journey to SIP accreditation' : 'supporting your operational excellence'}.</p>
+<p>I've attached the service agreement for your review. Once you're happy with everything, just sign and send it back. We'll then schedule your onboarding session and get your team set up with their login credentials.</p>
 
-<p>Best regards,</p>
+<p>Give me a call if you'd like to go through anything - happy to answer any questions.</p>
 
-<p><strong>[Your Name]</strong><br>
+<p>Best regards,<br>
+[Your Name]<br>
 [Your Title]<br>
 Shocking Energy Limited<br>
-📧 [Your Email]<br>
-📱 [Your Phone]<br>
-🌐 www.shockingenergy.com</p>
+[Your Email]<br>
+[Your Phone]</p>
 </div>`;
 
             // Update email preview
