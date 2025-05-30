@@ -974,7 +974,7 @@
                                 <strong>Shocking Energy Limited</strong>, a company incorporated and registered in England and Wales with company number 14657873 whose registered office is at 71-75 Shelton Street, Covent Garden, London, United Kingdom, WC2H 9JQ (hereinafter referred to as "Shocking Energy").
                             </li>
                             <li style="margin-bottom: 10px;">
-                                <strong><span class="companyName">[Your Company]</span></strong> (hereinafter referred to as "Client").
+                                <strong><span class="companyName">[Client Company Name]</span></strong>, a company incorporated and registered in England and Wales with company number <strong><span class="companyNumber">[Company Number]</span></strong> whose registered office is at <strong><span class="registeredAddress">[Registered Address]</span></strong> (hereinafter referred to as "<span class="companyNameShort">[Client]</span>" or "Client").
                             </li>
                         </ol>
                     </div>
@@ -1137,6 +1137,13 @@
                                 <p>Name: Kevin Bird</p>
                                 <p>Title: Director</p>
                                 <p>Date: _________________</p>
+                                <br>
+                                <p><strong>Witness:</strong></p>
+                                <br>
+                                <p>_________________________________</p>
+                                <p>Name: _________________</p>
+                                <p>Address: _________________</p>
+                                <p>_________________________</p>
                             </div>
                             <div>
                                 <p><strong>For and on behalf of <span class="companyName">[Client]</span>:</strong></p>
@@ -1145,6 +1152,13 @@
                                 <p>Name: _________________</p>
                                 <p>Title: _________________</p>
                                 <p>Date: _________________</p>
+                                <br>
+                                <p><strong>Witness:</strong></p>
+                                <br>
+                                <p>_________________________________</p>
+                                <p>Name: _________________</p>
+                                <p>Address: _________________</p>
+                                <p>_________________________</p>
                             </div>
                         </div>
                     </div>
@@ -1394,14 +1408,28 @@
                                 <p>Name: Kevin Bird</p>
                                 <p>Title: Director</p>
                                 <p>Date: _________________</p>
+                                <br>
+                                <p><strong>Witness:</strong></p>
+                                <br>
+                                <p>_________________________________</p>
+                                <p>Name: _________________</p>
+                                <p>Address: _________________</p>
+                                <p>_________________________</p>
                             </div>
                             <div>
-                                <p><strong>For and on behalf of <span class="clientCompanyNameShort">[Client]</span>:</strong></p>
+                                <p><strong>For and on behalf of <span class="companyName">[Client]</span>:</strong></p>
                                 <br><br>
                                 <p>_________________________________</p>
                                 <p>Name: _________________</p>
                                 <p>Title: _________________</p>
                                 <p>Date: _________________</p>
+                                <br>
+                                <p><strong>Witness:</strong></p>
+                                <br>
+                                <p>_________________________________</p>
+                                <p>Name: _________________</p>
+                                <p>Address: _________________</p>
+                                <p>_________________________</p>
                             </div>
                         </div>
                     </div>
@@ -1821,6 +1849,18 @@
             // Update company name in SaaS contract header
             document.querySelectorAll('.companyName').forEach(el => el.textContent = companyName);
             
+            // Get company details from form
+            const companyNumber = document.getElementById('companyNumber').value.trim() || '[Company Number]';
+            const registeredAddress = document.getElementById('registeredAddress').value.trim() || '[Registered Address]';
+            
+            // Update company details in SaaS contract
+            document.querySelectorAll('.companyNumber').forEach(el => el.textContent = companyNumber);
+            document.querySelectorAll('.registeredAddress').forEach(el => el.textContent = registeredAddress);
+            
+            // Set short company name
+            const shortName = companyName.split(' ')[0];
+            document.querySelectorAll('.companyNameShort').forEach(el => el.textContent = shortName);
+            
             // Populate detailed services schedule
             let servicesHTML = '<h4>Platform Access and Services</h4>';
             servicesHTML += '<p>The Client shall have access to the following services:</p>';
@@ -1898,6 +1938,30 @@
             }
             
             saasFeesHTML += `<p>3.4 Payment terms: Net 30 days from invoice date.</p>`;
+            
+            // Add overage rates for contracted customers
+            if (pricingModel !== 'payg') {
+                const paygPrices = calculatePlanPrices();
+                // Reset discount to PAYG rates
+                const originalDiscount = basePricing.discounts[pricingModel];
+                basePricing.discounts[pricingModel] = 1;
+                const paygUserPrice = calculatePlanPrices()[selectedPlan];
+                basePricing.discounts[pricingModel] = originalDiscount;
+                
+                saasFeesHTML += `<h4>3.5 Additional Usage (Overage) Rates</h4>`;
+                saasFeesHTML += `<p>Usage exceeding subscribed limits will be charged at current Pay As You Go rates:</p>`;
+                saasFeesHTML += `<ul style="margin-left: 20px;">`;
+                saasFeesHTML += `<li>Additional users: £${paygUserPrice}/user/month</li>`;
+                
+                // Calculate PAYG job rates for each selected platform
+                selectedPlatformsList.forEach(([platform, tier]) => {
+                    const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
+                    const baseJobCost = parseFloat(document.getElementById('baseJobCost').value) || 5;
+                    saasFeesHTML += `<li>${platformName} jobs exceeding ${tier}/month: £${baseJobCost.toFixed(2)}/job</li>`;
+                });
+                
+                saasFeesHTML += `</ul>`;
+            }
 
             document.getElementById('saasFees').innerHTML = saasFeesHTML;
 
