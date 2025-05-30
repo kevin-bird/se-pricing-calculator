@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shocking Energy - Internal Pricing Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: #1a1a1a;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .header .subtitle {
+            text-align: center;
+            color: #ffeb3b;
+            margin-top: 10px;
+        }
+
+        .pricing-controls {
+            background: #f0f0f0;
+            border: 2px dashed #999;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 30px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-item label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .control-item input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 80px;
+            text-align: center;
+        }
+
+        .pricing-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .pricing-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .pricing-option {
+            display: block;
+            cursor: pointer;
+        }
+
+        .pricing-option input[type="radio"] {
+            display: none;
+        }
+
+        .option-content {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .pricing-option:hover .option-content {
+            border-color: #ffeb3b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .pricing-option input[type="radio"]:checked + .option-content {
+            border-color: #4CAF50;
+            background: #f0f8f0;
+        }
+
+        .option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .option-header strong {
+            font-size: 1.2em;
+        }
+
+        .option-tag {
+            background: #ffeb3b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: #333;
+        }
+
+        .option-description {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #ccc;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(30px);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .plan-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            border-color: #ffeb3b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .plan-card.selected {
+            border-color: #4CAF50;
+            background: #f0f8f0;
+        }
+
+        .plan-name {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .plan-price {
+            font-size: 2.2em;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .plan-price small {
+            font-size: 0.4em;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .user-selector {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+
+        .user-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .user-slider {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: none;
+        }
+
+        .user-count-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4CAF50;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .user-quick-select {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .quick-select-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-select-btn:hover {
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+
+        .platform-section {
+            margin-top: 40px;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .platform-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .platform-card:hover {
+            border-color: #ffeb3b;
+        }
+
+        .platform-card.selected {
+            border-color: #4CAF50;
+            background: #f0f8f0;
+        }
+
+        .platform-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .platform-description {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .job-tier-selector {
+            margin-top: 10px;
+        }
+
+        .tier-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tier-option {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .tier-option:hover {
+            border-color: #4CAF50;
+        }
+
+        .tier-option.selected {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .tier-cost {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .tier-option.selected .tier-cost {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .professional-services {
+            margin-top: 40px;
+        }
+
+        .service-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .service-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            border-color: #ffeb3b;
+        }
+
+        .service-card.selected {
+            border-color: #4CAF50;
+            background: #f0f8f0;
+        }
+
+        .service-price {
+            font-size: 1.5em;
+            color: #4CAF50;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .service-monthly {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .live-price-display {
+            position: fixed;
+            right: 20px;
+            top: 100px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-width: 300px;
+            max-width: 350px;
+            z-index: 1000;
+            border: 1px solid #e0e0e0;
+        }
+
+        .price-breakdown {
+            margin-top: 15px;
+        }
+
+        .price-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95em;
+        }
+
+        .price-line.total {
+            border-bottom: none;
+            border-top: 2px solid #333;
+            margin-top: 10px;
+            padding-top: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .price-display-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+        }
+
+        .contract-preview {
+            display: none;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+
+        .contract-section-wrapper {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contract-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .contract-header h2 {
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .contract-content {
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .contract-section {
+            margin-bottom: 30px;
+        }
+
+        .contract-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        @media (max-width: 1200px) {
+            .live-price-display {
+                position: relative;
+                right: auto;
+                top: auto;
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-input-container {
+                flex-direction: column;
+            }
+            
+            .tier-options {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Shocking Energy - Internal Pricing Calculator</h1>
+            <div class="subtitle">Contract Generator Tool</div>
+        </div>
+    </div>
+
+    <!-- Live Price Display - Floating -->
+    <div class="live-price-display">
+        <div class="price-display-header">Live Pricing</div>
+        <div class="price-breakdown">
+            <div class="price-line">
+                <span>User Licenses:</span>
+                <span id="userCost">£0</span>
+            </div>
+            <div class="price-line">
+                <span>Platform Fee:</span>
+                <span id="platformCost">£0</span>
+            </div>
+            <div class="price-line">
+                <span>Professional Services:</span>
+                <span id="serviceCost">£0</span>
+            </div>
+            <div class="price-line total">
+                <span>Total:</span>
+                <span id="totalCost">£0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Pricing Controls -->
+        <div class="pricing-controls">
+            <div class="control-item">
+                <label>Advanced Monthly User Cost £</label>
+                <input type="number" id="advancedMonthly" value="59" min="0" step="1">
+            </div>
+            <div class="control-item">
+                <label>Cost per Job (Monthly) £</label>
+                <input type="number" id="baseJobCost" value="5" min="0" step="1">
+            </div>
+        </div>
+
+        <div class="pricing-section">
+            <h2 class="section-title">1. Pricing</h2>
+            <div class="pricing-options">
+                <label class="pricing-option">
+                    <input type="radio" name="pricingModel" value="payg" checked>
+                    <div class="option-content">
+                        <div class="option-header">
+                            <strong>Pay As You Go</strong>
+                            <span class="option-tag">No commitment</span>
+                        </div>
+                        <div class="option-description">Flexible pricing with no minimum commitment</div>
+                    </div>
+                </label>
+                <label class="pricing-option">
+                    <input type="radio" name="pricingModel" value="monthly">
+                    <div class="option-content">
+                        <div class="option-header">
+                            <strong>Monthly Contract</strong>
+                            <span class="option-tag">Rolling monthly</span>
+                        </div>
+                        <div class="option-description">20% discount on PAYG rates</div>
+                    </div>
+                </label>
+                <label class="pricing-option">
+                    <input type="radio" name="pricingModel" value="annual">
+                    <div class="option-content">
+                        <div class="option-header">
+                            <strong>Annual Contract</strong>
+                            <span class="option-tag">Best value</span>
+                        </div>
+                        <div class="option-description">40% discount on PAYG rates</div>
+                    </div>
+                </label>
+            </div>
+
+            <h2 class="section-title">2. Select Your Plan</h2>
+            <div class="plans-grid">
+                <div class="plan-card selected" data-plan="standard">
+                    <h3 class="plan-name">Standard</h3>
+                    <div class="plan-price">
+                        £<span class="price-value">16</span><small>/user/month</small>
+                    </div>
+                </div>
+
+                <div class="plan-card" data-plan="professional">
+                    <h3 class="plan-name">Professional</h3>
+                    <div class="plan-price">
+                        £<span class="price-value">28</span><small>/user/month</small>
+                    </div>
+                </div>
+
+                <div class="plan-card" data-plan="advanced">
+                    <h3 class="plan-name">Advanced</h3>
+                    <div class="plan-price">
+                        £<span class="price-value">39</span><small>/user/month</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-selector">
+                <h2 class="section-title">3. Number of Users</h2>
+                <div class="user-input-container">
+                    <div class="user-slider">
+                        <input type="range" class="slider" id="userSlider" min="1" max="100" value="5">
+                    </div>
+                    <div class="user-count-display" id="userCount">5</div>
+                </div>
+                <div class="user-quick-select">
+                    <button class="quick-select-btn" data-users="5">5 users</button>
+                    <button class="quick-select-btn" data-users="10">10 users</button>
+                    <button class="quick-select-btn" data-users="25">25 users</button>
+                    <button class="quick-select-btn" data-users="50">50 users</button>
+                    <button class="quick-select-btn" data-users="100">100 users</button>
+                </div>
+            </div>
+
+            <div class="platform-section">
+                <h2 class="section-title">4. Select Your Platform Workflow(s) & Job Volume</h2>
+                <p style="margin-bottom: 20px; color: #666;">You can select multiple platforms</p>
+                <div class="platform-grid">
+                    <div class="platform-card" data-platform="sip">
+                        <div class="platform-name">SIP Workflow</div>
+                        <div class="platform-description">Safe Isolation Provider workflow with market messages</div>
+                        <div class="job-tier-selector">
+                            <strong>Select job volume:</strong>
+                            <div class="tier-options">
+                                <div class="tier-option" data-tier="100">
+                                    <div>1-100 jobs</div>
+                                    <div class="tier-cost">£9/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="250">
+                                    <div>Up to 250</div>
+                                    <div class="tier-cost">£8/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="500">
+                                    <div>Up to 500</div>
+                                    <div class="tier-cost">£7/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="1000">
+                                    <div>Up to 1000</div>
+                                    <div class="tier-cost">£6/job</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="platform-card" data-platform="solar">
+                        <div class="platform-name">Solar Workflow</div>
+                        <div class="platform-description">MCS certified solar installation management</div>
+                        <div class="job-tier-selector">
+                            <strong>Select job volume:</strong>
+                            <div class="tier-options">
+                                <div class="tier-option" data-tier="100">
+                                    <div>1-100 jobs</div>
+                                    <div class="tier-cost">£9/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="250">
+                                    <div>Up to 250</div>
+                                    <div class="tier-cost">£8/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="500">
+                                    <div>Up to 500</div>
+                                    <div class="tier-cost">£7/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="1000">
+                                    <div>Up to 1000</div>
+                                    <div class="tier-cost">£6/job</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="platform-card" data-platform="mam">
+                        <div class="platform-name">AMR Installs</div>
+                        <div class="platform-description">RGMA compliant meter installations</div>
+                        <div class="job-tier-selector">
+                            <strong>Select job volume:</strong>
+                            <div class="tier-options">
+                                <div class="tier-option" data-tier="100">
+                                    <div>1-100 jobs</div>
+                                    <div class="tier-cost">£9/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="250">
+                                    <div>Up to 250</div>
+                                    <div class="tier-cost">£8/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="500">
+                                    <div>Up to 500</div>
+                                    <div class="tier-cost">£7/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="1000">
+                                    <div>Up to 1000</div>
+                                    <div class="tier-cost">£6/job</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="platform-card" data-platform="electrical">
+                        <div class="platform-name">Electrical Installation</div>
+                        <div class="platform-description">Safety certificates and compliance management</div>
+                        <div class="job-tier-selector">
+                            <strong>Select job volume:</strong>
+                            <div class="tier-options">
+                                <div class="tier-option" data-tier="100">
+                                    <div>1-100 jobs</div>
+                                    <div class="tier-cost">£9/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="250">
+                                    <div>Up to 250</div>
+                                    <div class="tier-cost">£8/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="500">
+                                    <div>Up to 500</div>
+                                    <div class="tier-cost">£7/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="1000">
+                                    <div>Up to 1000</div>
+                                    <div class="tier-cost">£6/job</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="platform-card" data-platform="telecoms">
+                        <div class="platform-name">Telecoms Workflow</div>
+                        <div class="platform-description">Telecoms installations with SIP integration</div>
+                        <div class="job-tier-selector">
+                            <strong>Select job volume:</strong>
+                            <div class="tier-options">
+                                <div class="tier-option" data-tier="100">
+                                    <div>1-100 jobs</div>
+                                    <div class="tier-cost">£9/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="250">
+                                    <div>Up to 250</div>
+                                    <div class="tier-cost">£8/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="500">
+                                    <div>Up to 500</div>
+                                    <div class="tier-cost">£7/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="1000">
+                                    <div>Up to 1000</div>
+                                    <div class="tier-cost">£6/job</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="platform-card" data-platform="ev">
+                        <div class="platform-name">EV Charger Installation</div>
+                        <div class="platform-description">Jumptech integrated EV charger workflow with SIP</div>
+                        <div class="job-tier-selector">
+                            <strong>Select job volume:</strong>
+                            <div class="tier-options">
+                                <div class="tier-option" data-tier="100">
+                                    <div>1-100 jobs</div>
+                                    <div class="tier-cost">£9/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="250">
+                                    <div>Up to 250</div>
+                                    <div class="tier-cost">£8/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="500">
+                                    <div>Up to 500</div>
+                                    <div class="tier-cost">£7/job</div>
+                                </div>
+                                <div class="tier-option" data-tier="1000">
+                                    <div>Up to 1000</div>
+                                    <div class="tier-cost">£6/job</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="professional-services">
+                <h2 class="section-title">5. SIP Accreditation (Optional)</h2>
+                <p>SIP Accreditation Support Services</p>
+                <div class="service-options">
+                    <div class="service-card" data-service="upfront" data-months="0">
+                        <h4>Fast Track</h4>
+                        <div class="service-price">£15,000</div>
+                        <div>Paid upfront</div>
+                    </div>
+                    <div class="service-card" data-service="three-month" data-months="3">
+                        <h4>Flexible</h4>
+                        <div class="service-price">£5,250</div>
+                        <div class="service-monthly">per month for 3 months</div>
+                        <div>Total: £15,750</div>
+                    </div>
+                    <div class="service-card" data-service="six-month" data-months="6">
+                        <h4>Standard</h4>
+                        <div class="service-price">£3,000</div>
+                        <div class="service-monthly">per month for 6 months</div>
+                        <div>Total: £18,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="generateContract()">Generate Contract</button>
+            </div>
+        </div>
+
+        <div class="contract-preview" id="contractPreview">
+            <!-- Software as a Service Contract -->
+            <div class="contract-section-wrapper">
+                <div class="contract-header">
+                    <h2>SOFTWARE AS A SERVICE AGREEMENT</h2>
+                    <p>Between Shocking Energy Limited and <span class="companyName">[Your Company]</span></p>
+                    <p>Date: <span class="contractDate"></span></p>
+                </div>
+                
+                <div class="contract-content">
+                    <div class="contract-section">
+                        <h3>1. Services</h3>
+                        <p>Shocking Energy Limited agrees to provide the following software services:</p>
+                        <ul id="saasServices"></ul>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>2. Term</h3>
+                        <p id="saasTerm"></p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>3. Fees & Payment</h3>
+                        <div id="saasFees"></div>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>4. Platform Access</h3>
+                        <p>The Client will have access to the Shocking Energy platform including:</p>
+                        <ul>
+                            <li>Web portal for job management and administration</li>
+                            <li>Mobile application for field engineers</li>
+                            <li>Selected workflow modules as specified</li>
+                            <li>Technical support during business hours</li>
+                        </ul>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>5. Data Protection</h3>
+                        <p>Both parties agree to comply with all applicable data protection legislation including GDPR. All data will be processed in accordance with our Privacy Policy.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>6. Termination</h3>
+                        <p id="saasTermination"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIP Accreditation Contract -->
+            <div class="contract-section-wrapper" id="sipContract" style="display: none; margin-top: 60px; page-break-before: always;">
+                <div class="contract-header">
+                    <h2>SIP ACCREDITATION SERVICES AGREEMENT</h2>
+                    <p>Between Shocking Energy Limited and <span class="companyName">[Your Company]</span></p>
+                    <p>Date: <span class="contractDate"></span></p>
+                </div>
+                
+                <div class="contract-content">
+                    <div class="contract-section">
+                        <h3>1. Services</h3>
+                        <p>Shocking Energy Limited agrees to provide SIP (Safe Isolation Provider) Accreditation support services including:</p>
+                        <ul>
+                            <li>Initial assessment and gap analysis</li>
+                            <li>Documentation preparation and review</li>
+                            <li>Process development and implementation support</li>
+                            <li>Mock audits and preparation</li>
+                            <li>Ongoing compliance support</li>
+                        </ul>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>2. Service Package</h3>
+                        <p id="sipPackage"></p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>3. Fees & Payment</h3>
+                        <div id="sipFees"></div>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>4. Deliverables</h3>
+                        <p>The service includes:</p>
+                        <ul>
+                            <li>Weekly progress meetings</li>
+                            <li>Access to SIP documentation templates</li>
+                            <li>Direct support from accreditation specialists</li>
+                            <li>Audit preparation materials</li>
+                        </ul>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>5. Terms</h3>
+                        <p>Professional services fees are non-refundable once work has commenced. The client acknowledges that accreditation success depends on their implementation of recommended processes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base pricing configuration
+        const basePricing = {
+            baseJobCost: 5,
+            advancedMonthly: 59,
+            planRatios: {
+                standard: 20/59,
+                professional: 35/59,
+                advanced: 59/59
+            },
+            discounts: {
+                payg: 1,        // No discount
+                monthly: 0.8,   // 20% discount
+                annual: 0.6     // 40% discount
+            },
+            services: {
+                upfront: { totalCost: 15000, months: 0 },
+                'three-month': { monthlyRate: 5250, months: 3 },
+                'six-month': { monthlyRate: 3000, months: 6 }
+            }
+        };
+
+        let selectedPlan = 'standard'; // Default selection
+        let selectedPlatforms = {}; // Object to store multiple platform selections
+        let selectedService = null;
+        let pricingModel = 'payg'; // Default to pay as you go
+        let userCount = 5;
+
+        // Calculate dynamic pricing based on controls
+        function calculatePlanPrices() {
+            const advancedMonthly = parseFloat(document.getElementById('advancedMonthly').value) || 59;
+            const discount = basePricing.discounts[pricingModel];
+            
+            return {
+                standard: Math.round(advancedMonthly * basePricing.planRatios.standard * discount),
+                professional: Math.round(advancedMonthly * basePricing.planRatios.professional * discount),
+                advanced: Math.round(advancedMonthly * discount)
+            };
+        }
+
+        // Calculate platform pricing based on tier and base job cost
+        function calculatePlatformPrice(tier) {
+            const baseJobCost = parseFloat(document.getElementById('baseJobCost').value) || 5;
+            const modelDiscount = basePricing.discounts[pricingModel];
+            let pricePerJob;
+            
+            // For Pay As You Go, 1-100 tier uses the exact base job cost
+            if (pricingModel === 'payg' && tier === '100') {
+                pricePerJob = baseJobCost;
+            } else {
+                // Apply tier discounts relative to base cost
+                switch(tier) {
+                    case '100':
+                        pricePerJob = baseJobCost; // Base price for 1-100
+                        break;
+                    case '250':
+                        pricePerJob = baseJobCost * 0.9; // 10% discount
+                        break;
+                    case '500':
+                        pricePerJob = baseJobCost * 0.8; // 20% discount
+                        break;
+                    case '1000':
+                        pricePerJob = baseJobCost * 0.7; // 30% discount
+                        break;
+                    default:
+                        pricePerJob = baseJobCost;
+                }
+                // Apply pricing model discount for contracts
+                pricePerJob = pricePerJob * modelDiscount;
+            }
+            
+            return {
+                pricePerJob: pricePerJob,
+                total: pricePerJob * parseInt(tier)
+            };
+        }
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pricing model selection
+            document.querySelectorAll('input[name="pricingModel"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    pricingModel = this.value;
+                    updatePrices();
+                    updateTierPrices();
+                    calculateTotal();
+                });
+            });
+
+            // Pricing control inputs
+            document.getElementById('baseJobCost').addEventListener('input', function() {
+                updateTierPrices();
+                calculateTotal();
+            });
+
+            document.getElementById('advancedMonthly').addEventListener('input', function() {
+                updatePrices();
+                calculateTotal();
+            });
+
+            // User slider
+            const userSlider = document.getElementById('userSlider');
+            userSlider.addEventListener('input', function() {
+                userCount = parseInt(this.value);
+                document.getElementById('userCount').textContent = userCount;
+                calculateTotal();
+            });
+
+            // Quick select buttons
+            document.querySelectorAll('.quick-select-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    userCount = parseInt(this.dataset.users);
+                    document.getElementById('userSlider').value = userCount;
+                    document.getElementById('userCount').textContent = userCount;
+                    calculateTotal();
+                });
+            });
+
+            // Plan selection
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedPlan = this.dataset.plan;
+                    calculateTotal();
+                });
+            });
+
+            // Platform selection
+            document.querySelectorAll('.platform-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // If clicking on a tier option, don't trigger platform selection
+                    if (e.target.classList.contains('tier-option') || e.target.parentElement.classList.contains('tier-option')) return;
+                    
+                    const platform = this.dataset.platform;
+                    
+                    // Toggle selection
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        delete selectedPlatforms[platform];
+                        // Clear tier selections for this platform
+                        this.querySelectorAll('.tier-option').forEach(tier => {
+                            tier.classList.remove('selected');
+                        });
+                    } else {
+                        this.classList.add('selected');
+                        selectedPlatforms[platform] = null; // No tier selected yet
+                    }
+                    
+                    calculateTotal();
+                });
+            });
+
+            // Tier selection
+            document.querySelectorAll('.tier-option').forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    const platformCard = this.closest('.platform-card');
+                    const platform = platformCard.dataset.platform;
+                    
+                    // Make sure platform is selected
+                    if (!platformCard.classList.contains('selected')) {
+                        platformCard.classList.add('selected');
+                    }
+                    
+                    // Clear other tier selections for this platform
+                    platformCard.querySelectorAll('.tier-option').forEach(t => t.classList.remove('selected'));
+                    
+                    // Select this tier
+                    this.classList.add('selected');
+                    selectedPlatforms[platform] = this.dataset.tier;
+                    
+                    calculateTotal();
+                });
+            });
+
+            // Service selection
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    // Toggle selection
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        selectedService = null;
+                    } else {
+                        document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedService = this.dataset.service;
+                    }
+                    calculateTotal();
+                });
+            });
+
+            // Set default date
+            document.getElementById('contractDate').textContent = new Date().toLocaleDateString('en-GB');
+            
+            // Initial setup
+            updatePrices();
+            updateTierPrices();
+            calculateTotal(); // Calculate initial total on load
+        });
+
+        function updatePrices() {
+            const prices = calculatePlanPrices();
+            
+            // Update plan prices display
+            document.querySelectorAll('.plan-card').forEach(card => {
+                const plan = card.dataset.plan;
+                const price = prices[plan];
+                card.querySelector('.price-value').textContent = price;
+            });
+        }
+
+        function updateTierPrices() {
+            // Update tier prices display
+            document.querySelectorAll('.tier-option').forEach(option => {
+                const tier = option.dataset.tier;
+                const { pricePerJob } = calculatePlatformPrice(tier);
+                option.querySelector('.tier-cost').textContent = `£${pricePerJob.toFixed(2)}/job`;
+            });
+        }
+
+        function calculateTotal() {
+            let userCost = 0;
+            let platformCost = 0;
+            let serviceCost = 0;
+            let serviceMonths = 0;
+
+            const prices = calculatePlanPrices();
+
+            // Calculate user cost
+            if (selectedPlan) {
+                const prices = calculatePlanPrices();
+                const userPrice = prices[selectedPlan];
+                userCost = userPrice * userCount;
+            }
+
+            // Calculate platform cost (sum of all selected platforms)
+            Object.entries(selectedPlatforms).forEach(([platform, tier]) => {
+                if (tier) {
+                    const { total } = calculatePlatformPrice(tier);
+                    platformCost += total;
+                }
+            });
+
+            // Calculate service cost
+            if (selectedService) {
+                const service = basePricing.services[selectedService];
+                if (service.months === 0) {
+                    // Upfront payment
+                    serviceCost = service.totalCost;
+                } else {
+                    // Monthly payment
+                    serviceCost = service.monthlyRate;
+                    serviceMonths = service.months;
+                }
+            }
+
+            // Update display
+            const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
+            document.getElementById('userCost').textContent = userCost ? `£${userCost.toLocaleString()}/${period}` : '£0';
+            document.getElementById('platformCost').textContent = platformCost ? `£${platformCost.toLocaleString()}/${period}` : '£0';
+            
+            // Professional services display
+            if (serviceCost) {
+                if (serviceMonths === 0) {
+                    document.getElementById('serviceCost').textContent = `£${serviceCost.toLocaleString()} (upfront)`;
+                } else {
+                    document.getElementById('serviceCost').textContent = `£${serviceCost.toLocaleString()}/month (${serviceMonths} months)`;
+                }
+            } else {
+                document.getElementById('serviceCost').textContent = '£0';
+            }
+            
+            const recurringTotal = userCost + platformCost;
+            let totalDisplay = '£0';
+            
+            if (recurringTotal > 0 || serviceCost > 0) {
+                if (recurringTotal > 0 && serviceCost > 0) {
+                    if (serviceMonths === 0) {
+                        totalDisplay = `£${recurringTotal.toLocaleString()}/${period}<br>+ £${serviceCost.toLocaleString()} (upfront)`;
+                    } else {
+                        totalDisplay = `£${recurringTotal.toLocaleString()}/${period}<br>+ £${serviceCost.toLocaleString()}/month (${serviceMonths} months)`;
+                    }
+                } else if (recurringTotal > 0) {
+                    totalDisplay = `£${recurringTotal.toLocaleString()}/${period}`;
+                } else {
+                    if (serviceMonths === 0) {
+                        totalDisplay = `£${serviceCost.toLocaleString()} (upfront)`;
+                    } else {
+                        totalDisplay = `£${serviceCost.toLocaleString()}/month (${serviceMonths} months)`;
+                    }
+                }
+            }
+            
+            document.getElementById('totalCost').innerHTML = totalDisplay;
+        }
+
+        function generateContract() {
+            // Check if we have required selections
+            const selectedPlatformsList = Object.entries(selectedPlatforms).filter(([p, tier]) => tier !== null);
+            
+            if (!selectedPlan || selectedPlatformsList.length === 0) {
+                alert('Please select a plan and at least one platform workflow with job volume tier before generating a contract');
+                return;
+            }
+
+            const prices = calculatePlanPrices();
+
+            // Populate contract services
+            const services = [];
+            services.push(`${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan - ${userCount} users`);
+            
+            // Add all selected platforms
+            selectedPlatformsList.forEach(([platform, tier]) => {
+                const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
+                services.push(`${platformName} Platform Access - Up to ${tier} jobs per month`);
+            });
+            
+            if (selectedService) {
+                services.push('SIP Accreditation Professional Services');
+            }
+
+            document.getElementById('contractServices').innerHTML = 
+                services.map(s => `<li>${s}</li>`).join('');
+
+            // Set term
+            const term = isAnnual ? 
+                'This agreement commences on the date above and continues for an initial period of 12 months.' :
+                'This agreement commences on the date above and continues on a rolling monthly basis.';
+            document.getElementById('contractTerm').textContent = term;
+
+            // Set fees
+            const userPrice = prices[selectedPlan][isAnnual ? 'annual' : 'monthly'];
+            
+            let feesHTML = `
+                <p>User Licenses: £${userPrice} per user per ${isAnnual ? 'year' : 'month'} x ${userCount} users = £${(userPrice * userCount).toLocaleString()} per ${isAnnual ? 'year' : 'month'}</p>
+            `;
+            
+            // Add platform fees
+            let totalPlatformCost = 0;
+            selectedPlatformsList.forEach(([platform, tier]) => {
+                const { pricePerJob, total: platformCost } = calculatePlatformPrice(tier);
+                totalPlatformCost += platformCost;
+                const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
+                feesHTML += `<p>${platformName}: Up to ${tier} jobs per month at £${pricePerJob.toFixed(2)} per job = £${platformCost.toLocaleString()} per ${period}</p>`;
+            });
+
+            if (selectedService) {
+                const service = basePricing.services[selectedService];
+                if (service.months === 0) {
+                    feesHTML += `<p>Professional Services: £${service.totalCost.toLocaleString()} (paid upfront)</p>`;
+                } else {
+                    const totalServiceCost = service.monthlyRate * service.months;
+                    feesHTML += `<p>Professional Services: £${service.monthlyRate.toLocaleString()} per month for ${service.months} months = £${totalServiceCost.toLocaleString()} total</p>`;
+                }
+            }
+
+            document.getElementById('contractFees').innerHTML = feesHTML;
+
+            // Show contract
+            document.getElementById('contractPreview').style.display = 'block';
+            document.getElementById('contractPreview').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
