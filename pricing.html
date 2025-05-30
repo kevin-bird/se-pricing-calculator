@@ -954,6 +954,7 @@
 
             <div class="action-buttons">
                 <button class="btn btn-primary" onclick="generateContract()">Generate Contract</button>
+                <button class="btn btn-primary" onclick="generateEmail()" style="background: #2196F3;">Generate Email</button>
             </div>
         </div>
 
@@ -962,46 +963,190 @@
             <div class="contract-section-wrapper">
                 <div class="contract-header">
                     <h2>SOFTWARE AS A SERVICE AGREEMENT</h2>
-                    <p>Between Shocking Energy Limited and <span class="companyName">[Your Company]</span></p>
-                    <p>Date: <span class="contractDate"></span></p>
+                    <p>THIS AGREEMENT is made on <span class="contractDate"></span> by and between:</p>
                 </div>
                 
                 <div class="contract-content">
-                    <div class="contract-section">
-                        <h3>1. Services</h3>
-                        <p>Shocking Energy Limited agrees to provide the following software services:</p>
-                        <ul id="saasServices"></ul>
+                    <div style="margin-bottom: 20px;">
+                        <h3>PARTIES:</h3>
+                        <ol style="margin-left: 20px;">
+                            <li style="margin-bottom: 10px;">
+                                <strong>Shocking Energy Limited</strong>, a company incorporated and registered in England and Wales with company number 14657873 whose registered office is at 71-75 Shelton Street, Covent Garden, London, United Kingdom, WC2H 9JQ (hereinafter referred to as "Shocking Energy").
+                            </li>
+                            <li style="margin-bottom: 10px;">
+                                <strong><span class="companyName">[Your Company]</span></strong> (hereinafter referred to as "Client").
+                            </li>
+                        </ol>
                     </div>
 
                     <div class="contract-section">
-                        <h3>2. Term</h3>
+                        <h3>BACKGROUND:</h3>
+                        <p style="margin-bottom: 10px;">A. Shocking Energy provides software-as-a-service (SAAS) solutions in the energy sector, specialising in workflow management and market messaging services.</p>
+                        <p style="margin-bottom: 10px;">B. The Client wishes to utilise Shocking Energy's platform for job management, workflow automation, and industry compliance.</p>
+                        <p style="margin-bottom: 10px;">C. The parties acknowledge that the provision of the Services will involve the processing of personal data and that appropriate data protection measures shall be implemented.</p>
+                    </div>
+
+                    <p style="margin-top: 20px;"><strong>THEREFORE</strong>, in consideration of the mutual promises and covenants contained herein, the parties hereby agree as follows:</p>
+
+                    <div class="contract-section">
+                        <h3>1. SERVICE ENGAGEMENT</h3>
+                        <p style="margin-bottom: 10px;">1.1 Shocking Energy shall provide the Client with access to its software platform and related services as described in this Agreement.</p>
+                        <p style="margin-bottom: 10px;">1.2 The scope of services is detailed in Schedule 1 of this Agreement.</p>
+                        <p style="margin-bottom: 10px;">1.3 The Client agrees to use the services in accordance with the terms and conditions set forth herein.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>2. TERM</h3>
                         <p id="saasTerm"></p>
+                        <p style="margin-bottom: 10px;">2.2 The Agreement shall automatically renew for successive periods of the same duration unless either party provides written notice of non-renewal at least 30 days before the end of the current term.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>3. Fees & Payment</h3>
+                        <h3>3. FEES AND PAYMENT</h3>
                         <div id="saasFees"></div>
+                        <p style="margin-bottom: 10px;">3.5 All fees are exclusive of VAT, which shall be added at the prevailing rate.</p>
+                        <p style="margin-bottom: 10px;">3.6 Late payments shall incur interest at 2% per month above the Bank of England base rate.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>4. Platform Access</h3>
-                        <p>The Client will have access to the Shocking Energy platform including:</p>
-                        <ul>
-                            <li>Web portal for job management and administration</li>
-                            <li>Mobile application for field engineers</li>
-                            <li>Selected workflow modules as specified</li>
-                            <li>Technical support during business hours</li>
+                        <h3>4. SERVICE LEVEL AGREEMENT (SLA)</h3>
+                        <h4>4.1 Performance Standards</h4>
+                        <p>Shocking Energy commits to:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Platform availability of 99.5% measured monthly, excluding scheduled maintenance</li>
+                            <li>Maximum response times:
+                                <ul>
+                                    <li>Priority 1 (Critical): 4 hours</li>
+                                    <li>Priority 2 (High): 8 hours</li>
+                                    <li>Priority 3 (Medium): 24 hours</li>
+                                    <li>Priority 4 (Low): 48 hours</li>
+                                </ul>
+                            </li>
+                            <li>Scheduled maintenance with minimum 72 hours notice</li>
+                            <li>Data backup performed daily with 30-day retention</li>
+                        </ul>
+                        <h4>4.2 Service Credits</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>For availability below 99.5%: 5% credit of monthly fee</li>
+                            <li>For availability below 99%: 10% credit of monthly fee</li>
+                            <li>For availability below 95%: 25% credit of monthly fee</li>
                         </ul>
                     </div>
 
                     <div class="contract-section">
-                        <h3>5. Data Protection</h3>
-                        <p>Both parties agree to comply with all applicable data protection legislation including GDPR. All data will be processed in accordance with our Privacy Policy.</p>
+                        <h3>5. PLATFORM ACCESS AND USAGE</h3>
+                        <p style="margin-bottom: 10px;">5.1 The Client will have access to the Shocking Energy platform including:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Web portal for job management and administration</li>
+                            <li>Mobile application for field engineers</li>
+                            <li>Selected workflow modules as specified</li>
+                            <li>Technical support during business hours</li>
+                            <li>API access (where applicable)</li>
+                        </ul>
+                        <p style="margin-bottom: 10px;">5.2 Access credentials are for the Client's use only and must not be shared with third parties.</p>
+                        <p style="margin-bottom: 10px;">5.3 The Client is responsible for all activities conducted under their account.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>6. Termination</h3>
+                        <h3>6. DATA PROTECTION AND SECURITY</h3>
+                        <p style="margin-bottom: 10px;">6.1 Both parties agree to comply with all applicable data protection legislation including GDPR.</p>
+                        <p style="margin-bottom: 10px;">6.2 Shocking Energy shall implement appropriate technical and organisational measures to protect personal data.</p>
+                        <p style="margin-bottom: 10px;">6.3 Data shall be processed solely for the purpose of providing the Services.</p>
+                        <p style="margin-bottom: 10px;">6.4 The Client retains ownership of all data uploaded to the platform.</p>
+                        <p style="margin-bottom: 10px;">6.5 Upon termination, data will be available for export for 30 days before deletion.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>7. INTELLECTUAL PROPERTY</h3>
+                        <p style="margin-bottom: 10px;">7.1 Shocking Energy retains all rights, title, and interest in the platform and associated intellectual property.</p>
+                        <p style="margin-bottom: 10px;">7.2 The Client is granted a non-exclusive, non-transferable licence to use the platform for the duration of this Agreement.</p>
+                        <p style="margin-bottom: 10px;">7.3 The Client retains all rights to their data and any client-specific configurations.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>8. SUPPORT AND MAINTENANCE</h3>
+                        <p style="margin-bottom: 10px;">8.1 Shocking Energy shall provide:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Email support during business hours (9 am–5 pm UK time, Monday–Friday)</li>
+                            <li>Regular platform updates and maintenance</li>
+                            <li>Access to online documentation and support resources</li>
+                            <li>Bug fixes and security patches</li>
+                        </ul>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>9. CLIENT OBLIGATIONS</h3>
+                        <p style="margin-bottom: 10px;">9.1 The Client shall:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Provide accurate and complete information</li>
+                            <li>Comply with all applicable laws and regulations</li>
+                            <li>Not use the platform for any unlawful purpose</li>
+                            <li>Maintain the confidentiality of access credentials</li>
+                            <li>Report any security breaches or unauthorised access immediately</li>
+                        </ul>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>10. LIMITATION OF LIABILITY</h3>
+                        <p style="margin-bottom: 10px;">10.1 To the fullest extent permitted by law, Shocking Energy's total liability shall not exceed the total amount of fees paid in the twelve months preceding the event giving rise to the liability.</p>
+                        <p style="margin-bottom: 10px;">10.2 Neither party shall be liable for any indirect, incidental, or consequential damages.</p>
+                        <p style="margin-bottom: 10px;">10.3 Nothing in this Agreement shall limit liability for death or personal injury caused by negligence, fraud, or any other liability that cannot be excluded by law.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>11. TERMINATION</h3>
                         <p id="saasTermination"></p>
+                        <p style="margin-bottom: 10px;">11.2 Either party may terminate immediately upon material breach by the other party if not remedied within 14 days of written notice.</p>
+                        <p style="margin-bottom: 10px;">11.3 Upon termination, all outstanding fees become immediately due and payable.</p>
+                        <p style="margin-bottom: 10px;">11.4 The Client's access to the platform will be suspended upon termination.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>12. FORCE MAJEURE</h3>
+                        <p style="margin-bottom: 10px;">12.1 Neither party shall be liable for any failure or delay caused by circumstances beyond reasonable control, including but not limited to acts of God, war, terrorism, strikes, pandemics, or other events beyond the reasonable control of the affected party.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>13. DISPUTE RESOLUTION</h3>
+                        <p style="margin-bottom: 10px;">13.1 The parties shall attempt to resolve any disputes through good faith negotiations.</p>
+                        <p style="margin-bottom: 10px;">13.2 If unresolved within 30 days, disputes shall be referred to mediation in accordance with the CEDR Model Mediation Procedure.</p>
+                        <p style="margin-bottom: 10px;">13.3 If the dispute is not resolved through mediation, either party may commence proceedings in the courts of England and Wales.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>14. GENERAL PROVISIONS</h3>
+                        <p style="margin-bottom: 10px;">14.1 This Agreement constitutes the entire agreement between the parties.</p>
+                        <p style="margin-bottom: 10px;">14.2 Any amendments must be in writing and signed by both parties.</p>
+                        <p style="margin-bottom: 10px;">14.3 This Agreement shall be governed by the laws of England and Wales.</p>
+                        <p style="margin-bottom: 10px;">14.4 If any provision is found to be invalid, the remaining provisions shall remain in effect.</p>
+                    </div>
+
+                    <div class="contract-section" style="page-break-before: always;">
+                        <h3>SCHEDULE 1 - SERVICES DESCRIPTION</h3>
+                        <div id="saasServicesDetailed"></div>
+                    </div>
+
+                    <div class="contract-section" style="margin-top: 60px;">
+                        <p><strong>IN WITNESS WHEREOF</strong>, the parties have executed this Agreement as of the date first above written.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px;">
+                            <div>
+                                <p><strong>For and on behalf of Shocking Energy Limited:</strong></p>
+                                <br><br>
+                                <p>_________________________________</p>
+                                <p>Name: Kevin Bird</p>
+                                <p>Title: Director</p>
+                                <p>Date: _________________</p>
+                            </div>
+                            <div>
+                                <p><strong>For and on behalf of <span class="companyName">[Client]</span>:</strong></p>
+                                <br><br>
+                                <p>_________________________________</p>
+                                <p>Name: _________________</p>
+                                <p>Title: _________________</p>
+                                <p>Date: _________________</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1010,86 +1155,281 @@
             <div class="contract-section-wrapper" id="sipContract" style="display: none; margin-top: 60px; page-break-before: always;">
                 <div class="contract-header">
                     <h2>PROFESSIONAL SERVICES AGREEMENT</h2>
+                    <p>FOR SIP ACCREDITATION SUPPORT SERVICES</p>
                     <p>THIS AGREEMENT is made on <span class="contractDate"></span> (the "Effective Date") by and between:</p>
                 </div>
                 
                 <div class="contract-content">
                     <div style="margin-bottom: 20px;">
-                        <ul style="margin-left: 20px;">
+                        <h3>PARTIES:</h3>
+                        <ol style="margin-left: 20px;">
                             <li style="margin-bottom: 10px;">
-                                <strong>Shocking Energy Limited</strong>, a company incorporated and registered in England and Wales with company number 14657873 whose registered office is at 71-75 Shelton Street, Covent Garden, London WC2H 9JQ ("Shocking Energy" or "Consultant"); and
+                                <strong>Shocking Energy Limited</strong>, a company incorporated and registered in England and Wales with company number 14657873 whose registered office is at 71-75 Shelton Street, Covent Garden, London, United Kingdom, WC2H 9JQ (hereinafter referred to as "Shocking Energy" or "Consultant").
                             </li>
                             <li style="margin-bottom: 10px;">
-                                <strong><span id="clientCompanyName">[Client Company Name]</span></strong>, a company incorporated and registered in England and Wales with company number <strong><span id="clientCompanyNumber">[Company Number]</span></strong> whose registered office is at <strong><span id="clientRegisteredAddress">[Registered Address]</span></strong> ("<span id="clientCompanyNameShort">[Client]</span>" or "Client").
+                                <strong><span id="clientCompanyName">[Client Company Name]</span></strong>, a company incorporated and registered in England and Wales with company number <strong><span id="clientCompanyNumber">[Company Number]</span></strong> whose registered office is at <strong><span id="clientRegisteredAddress">[Registered Address]</span></strong> (hereinafter referred to as "<span id="clientCompanyNameShort">[Client]</span>" or "Client").
                             </li>
-                        </ul>
-                        <p style="margin-top: 15px;">Shocking Energy and <span id="clientCompanyNameShort2">[Client]</span> are each a "Party" and together the "Parties".</p>
+                        </ol>
                     </div>
 
                     <div class="contract-section">
-                        <h3>1. Background</h3>
-                        <p style="margin-bottom: 10px;">1.1 Shocking Energy provides professional consultancy services to assist organisations in achieving Safe Isolation Provider (SIP) accreditation and meeting related regulatory requirements of the UK metering industry.</p>
-                        <p style="margin-bottom: 10px;">1.2 <span id="clientCompanyNameShort3">[Client]</span> wishes to obtain SIP accreditation and has engaged Shocking Energy to provide professional services to support that objective.</p>
-                        <p style="margin-bottom: 10px;">1.3 The Parties have agreed that Shocking Energy will perform the services set out in Schedule 1 (the "Services") for the fees described in clause 5.</p>
+                        <h3>BACKGROUND:</h3>
+                        <p style="margin-bottom: 10px;">A. Shocking Energy provides professional consultancy services to assist organisations in achieving Safe Isolation Provider (SIP) accreditation and meeting related regulatory requirements of the UK metering industry.</p>
+                        <p style="margin-bottom: 10px;">B. <span class="clientCompanyNameShort">[Client]</span> wishes to obtain SIP accreditation and has engaged Shocking Energy to provide professional services to support that objective.</p>
+                        <p style="margin-bottom: 10px;">C. The Parties have agreed that Shocking Energy will perform the services set out in Schedule 1 (the "Services") for the fees described in Clause 4.</p>
+                        <p style="margin-bottom: 10px;">D. The Parties acknowledge that successful accreditation depends on the Client's implementation of recommended processes and procedures.</p>
+                    </div>
+
+                    <p style="margin-top: 20px;"><strong>THEREFORE</strong>, in consideration of the mutual promises and covenants contained herein, the parties hereby agree as follows:</p>
+
+                    <div class="contract-section">
+                        <h3>1. ENGAGEMENT OF SERVICES</h3>
+                        <p style="margin-bottom: 10px;">1.1 <span class="clientCompanyNameShort">[Client]</span> hereby engages Shocking Energy, and Shocking Energy agrees to provide the Services in accordance with the terms of this Agreement.</p>
+                        <p style="margin-bottom: 10px;">1.2 Shocking Energy shall supply all personnel, materials, know-how and expertise reasonably necessary to perform the Services.</p>
+                        <p style="margin-bottom: 10px;">1.3 Shocking Energy shall perform the Services with reasonable skill and care and in accordance with good industry practice.</p>
+                        <p style="margin-bottom: 10px;">1.4 The Client shall provide timely access to personnel, information, and systems as reasonably required for the performance of the Services.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>2. Engagement of Services</h3>
-                        <p style="margin-bottom: 10px;">2.1 <span id="clientCompanyNameShort4">[Client]</span> hereby engages Shocking Energy, and Shocking Energy agrees to provide the Services in accordance with the terms of this Agreement.</p>
-                        <p style="margin-bottom: 10px;">2.2 Shocking Energy shall supply all personnel, materials, know-how and expertise reasonably necessary to perform the Services.</p>
+                        <h3>2. SCOPE OF SERVICES</h3>
+                        <p style="margin-bottom: 10px;">2.1 The Services to be provided are detailed in Schedule 1 attached to this Agreement.</p>
+                        <p style="margin-bottom: 10px;">2.2 Any services not expressly included in Schedule 1 shall be subject to separate agreement and additional fees.</p>
+                        <p style="margin-bottom: 10px;">2.3 Shocking Energy reserves the right to make changes to the Services where necessary to comply with any applicable law or regulatory requirement.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>3. Term</h3>
+                        <h3>3. TERM</h3>
                         <p id="sipContractTerm">3.1 This Agreement commences on the Effective Date and shall continue for an initial period of 3 calendar months (the "Initial Term").</p>
+                        <p style="margin-bottom: 10px;">3.2 Upon expiry of the Initial Term, this Agreement may be extended by mutual written agreement of the Parties.</p>
+                        <p style="margin-bottom: 10px;">3.3 Either party may terminate this Agreement with 30 days written notice.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>4. Fees & Payment</h3>
+                        <h3>4. FEES AND PAYMENT</h3>
                         <div id="sipContractFees"></div>
+                        <p style="margin-bottom: 10px;">4.4 All fees are exclusive of VAT, which shall be added at the prevailing rate.</p>
+                        <p style="margin-bottom: 10px;">4.5 Invoices shall be submitted monthly and payment is due within 30 days of the invoice date.</p>
+                        <p style="margin-bottom: 10px;">4.6 Late payments shall incur interest at 2% per month above the Bank of England base rate.</p>
+                        <p style="margin-bottom: 10px;">4.7 Professional services fees are non-refundable once work has commenced.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>5. Services Description</h3>
-                        <p>The Services include:</p>
-                        <ul>
-                            <li>Initial assessment and gap analysis</li>
-                            <li>Documentation preparation and review</li>
-                            <li>Process development and implementation support</li>
-                            <li>Mock audits and preparation</li>
-                            <li>Ongoing compliance support</li>
-                            <li>Weekly progress meetings</li>
-                            <li>Access to SIP documentation templates</li>
-                            <li>Direct support from accreditation specialists</li>
-                            <li>Audit preparation materials</li>
+                        <h3>5. CLIENT OBLIGATIONS</h3>
+                        <p style="margin-bottom: 10px;">5.1 The Client shall:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Provide timely access to relevant personnel for meetings and workshops</li>
+                            <li>Supply all necessary documentation and information</li>
+                            <li>Implement recommended processes and procedures</li>
+                            <li>Allocate sufficient resources to achieve accreditation objectives</li>
+                            <li>Notify Shocking Energy promptly of any changes that may affect the Services</li>
                         </ul>
                     </div>
 
                     <div class="contract-section">
-                        <h3>6. Intellectual Property</h3>
-                        <p>All intellectual property rights in any materials, documents, or processes developed by Shocking Energy in the course of providing the Services shall remain the property of Shocking Energy.</p>
+                        <h3>6. DELIVERABLES AND MILESTONES</h3>
+                        <p style="margin-bottom: 10px;">6.1 Shocking Energy shall provide deliverables in accordance with the timeline set out in Schedule 2.</p>
+                        <p style="margin-bottom: 10px;">6.2 The Client shall review and provide feedback on deliverables within 5 working days of receipt.</p>
+                        <p style="margin-bottom: 10px;">6.3 Delays caused by the Client may result in adjustment to timelines and additional fees.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>7. Confidentiality</h3>
-                        <p>Both parties agree to maintain the confidentiality of all proprietary and confidential information disclosed during the performance of this Agreement.</p>
+                        <h3>7. INTELLECTUAL PROPERTY</h3>
+                        <p style="margin-bottom: 10px;">7.1 All intellectual property rights in any materials, documents, methodologies, or processes developed by Shocking Energy in the course of providing the Services shall remain the property of Shocking Energy.</p>
+                        <p style="margin-bottom: 10px;">7.2 The Client is granted a non-exclusive, non-transferable licence to use deliverables solely for the purpose of achieving and maintaining SIP accreditation.</p>
+                        <p style="margin-bottom: 10px;">7.3 The Client shall not reproduce, distribute, or create derivative works from Shocking Energy's materials without prior written consent.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>8. Limitation of Liability</h3>
-                        <p>Professional services fees are non-refundable once work has commenced. The Client acknowledges that accreditation success depends on their implementation of recommended processes and procedures.</p>
+                        <h3>8. CONFIDENTIALITY</h3>
+                        <p style="margin-bottom: 10px;">8.1 Both parties agree to maintain the confidentiality of all proprietary and confidential information disclosed during the performance of this Agreement.</p>
+                        <p style="margin-bottom: 10px;">8.2 This obligation shall survive termination of this Agreement for a period of 5 years.</p>
+                        <p style="margin-bottom: 10px;">8.3 This clause shall not apply to information that is publicly available or required to be disclosed by law.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>9. Termination</h3>
-                        <p>Either party may terminate this Agreement with 30 days written notice. Upon termination, all outstanding fees become immediately due and payable.</p>
+                        <h3>9. DATA PROTECTION</h3>
+                        <p style="margin-bottom: 10px;">9.1 Both parties shall comply with all applicable data protection legislation including the UK GDPR and Data Protection Act 2018.</p>
+                        <p style="margin-bottom: 10px;">9.2 Where personal data is processed, the parties shall enter into appropriate data processing agreements.</p>
+                        <p style="margin-bottom: 10px;">9.3 Each party shall implement appropriate technical and organisational measures to protect personal data.</p>
                     </div>
 
                     <div class="contract-section">
-                        <h3>10. Governing Law</h3>
-                        <p>This Agreement shall be governed by and construed in accordance with the laws of England and Wales.</p>
+                        <h3>10. LIABILITY AND INDEMNITY</h3>
+                        <p style="margin-bottom: 10px;">10.1 Shocking Energy's total liability under this Agreement shall not exceed the total fees paid by the Client in the 12 months preceding the event giving rise to liability.</p>
+                        <p style="margin-bottom: 10px;">10.2 Neither party shall be liable for any indirect, incidental, or consequential damages.</p>
+                        <p style="margin-bottom: 10px;">10.3 The Client acknowledges that accreditation success depends on their implementation of recommended processes and procedures.</p>
+                        <p style="margin-bottom: 10px;">10.4 Nothing in this Agreement shall limit liability for death or personal injury caused by negligence, fraud, or any other liability that cannot be excluded by law.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>11. FORCE MAJEURE</h3>
+                        <p style="margin-bottom: 10px;">11.1 Neither party shall be liable for any failure or delay caused by circumstances beyond reasonable control, including but not limited to acts of God, war, terrorism, strikes, pandemics, or other events beyond the reasonable control of the affected party.</p>
+                        <p style="margin-bottom: 10px;">11.2 The affected party shall notify the other party in writing as soon as possible of the occurrence of a force majeure event.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>12. TERMINATION</h3>
+                        <p style="margin-bottom: 10px;">12.1 Either party may terminate this Agreement:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>With 30 days written notice</li>
+                            <li>Immediately upon material breach by the other party that is not remedied within 14 days of written notice</li>
+                            <li>Immediately if the other party becomes insolvent or ceases trading</li>
+                        </ul>
+                        <p style="margin-bottom: 10px;">12.2 Upon termination, all outstanding fees become immediately due and payable.</p>
+                        <p style="margin-bottom: 10px;">12.3 Termination shall not affect any rights or obligations that have accrued prior to termination.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>13. DISPUTE RESOLUTION</h3>
+                        <p style="margin-bottom: 10px;">13.1 The parties shall attempt to resolve any disputes through good faith negotiations.</p>
+                        <p style="margin-bottom: 10px;">13.2 If unresolved within 30 days, disputes shall be referred to mediation in accordance with the CEDR Model Mediation Procedure.</p>
+                        <p style="margin-bottom: 10px;">13.3 If the dispute is not resolved through mediation within 60 days, either party may commence proceedings in the courts of England and Wales.</p>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>14. GENERAL PROVISIONS</h3>
+                        <p style="margin-bottom: 10px;">14.1 This Agreement constitutes the entire agreement between the parties and supersedes all prior agreements and understandings.</p>
+                        <p style="margin-bottom: 10px;">14.2 Any amendments must be in writing and signed by authorised representatives of both parties.</p>
+                        <p style="margin-bottom: 10px;">14.3 If any provision is found to be invalid or unenforceable, the remaining provisions shall remain in full force and effect.</p>
+                        <p style="margin-bottom: 10px;">14.4 This Agreement shall be governed by the laws of England and Wales.</p>
+                        <p style="margin-bottom: 10px;">14.5 Neither party may assign this Agreement without the prior written consent of the other party.</p>
+                    </div>
+
+                    <div class="contract-section" style="page-break-before: always;">
+                        <h3>SCHEDULE 1 - SERVICES DESCRIPTION</h3>
+                        <p style="margin-bottom: 10px;"><strong>SIP Accreditation Support Services</strong></p>
+                        <p>Shocking Energy shall provide the following professional services:</p>
+                        
+                        <h4>1. Initial Assessment and Gap Analysis</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Comprehensive review of current processes and procedures</li>
+                            <li>Gap analysis against SIP accreditation requirements</li>
+                            <li>Risk assessment and mitigation planning</li>
+                            <li>Detailed findings report with recommendations</li>
+                        </ul>
+
+                        <h4>2. Documentation Development</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Creation of required policies and procedures</li>
+                            <li>Development of work instructions and process maps</li>
+                            <li>Template creation for operational documents</li>
+                            <li>Document control system implementation</li>
+                        </ul>
+
+                        <h4>3. Process Implementation Support</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Process design and optimization</li>
+                            <li>Implementation planning and guidance</li>
+                            <li>Change management support</li>
+                            <li>Operational readiness assessment</li>
+                        </ul>
+
+                        <h4>4. Training and Knowledge Transfer</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>SIP requirements training for key personnel</li>
+                            <li>Process and procedure training</li>
+                            <li>Internal audit training</li>
+                            <li>Provision of training materials</li>
+                        </ul>
+
+                        <h4>5. Pre-Audit Support</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Mock audits and assessments</li>
+                            <li>Corrective action planning</li>
+                            <li>Audit preparation workshops</li>
+                            <li>Evidence compilation support</li>
+                        </ul>
+
+                        <h4>6. Ongoing Support</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>Weekly progress meetings</li>
+                            <li>Email and phone support during business hours</li>
+                            <li>Access to SIP documentation library</li>
+                            <li>Regulatory update notifications</li>
+                        </ul>
+                    </div>
+
+                    <div class="contract-section">
+                        <h3>SCHEDULE 2 - DELIVERABLES AND TIMELINE</h3>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Deliverable</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Timeline</th>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Initial Assessment Report</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Week 2</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Gap Analysis and Recommendations</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Week 3</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Policy and Procedure Documentation</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Week 6</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Training Delivery</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Week 8</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Mock Audit</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Week 10</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Audit Readiness Confirmation</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Week 12</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="contract-section" style="margin-top: 60px;">
+                        <p><strong>IN WITNESS WHEREOF</strong>, the parties have executed this Agreement as of the date first above written.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px;">
+                            <div>
+                                <p><strong>For and on behalf of Shocking Energy Limited:</strong></p>
+                                <br><br>
+                                <p>_________________________________</p>
+                                <p>Name: Kevin Bird</p>
+                                <p>Title: Director</p>
+                                <p>Date: _________________</p>
+                            </div>
+                            <div>
+                                <p><strong>For and on behalf of <span class="clientCompanyNameShort">[Client]</span>:</strong></p>
+                                <br><br>
+                                <p>_________________________________</p>
+                                <p>Name: _________________</p>
+                                <p>Title: _________________</p>
+                                <p>Date: _________________</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Template Section -->
+    <div class="contract-preview" id="emailPreview" style="display: none;">
+        <div class="contract-section-wrapper">
+            <div class="contract-header">
+                <h2>EMAIL TEMPLATE</h2>
+                <p>Copy and paste this email to send to your client</p>
+            </div>
+            
+            <div class="contract-content" style="background: #f5f5f5; padding: 20px; border-radius: 8px;">
+                <div style="margin-bottom: 20px;">
+                    <strong>To:</strong> <span id="emailClientName">[Client Email]</span><br>
+                    <strong>Subject:</strong> Shocking Energy Platform - Proposal and Service Agreement
+                </div>
+                
+                <div id="emailBody" style="white-space: pre-wrap; line-height: 1.6;">
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="copyEmail()">Copy Email to Clipboard</button>
             </div>
         </div>
     </div>
@@ -1481,30 +1821,57 @@
             // Update company name in SaaS contract header
             document.querySelectorAll('.companyName').forEach(el => el.textContent = companyName);
             
-            // Populate SaaS contract services (excluding SIP accreditation)
-            const saasServices = [];
-            saasServices.push(`${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan - ${userCount} users`);
+            // Populate detailed services schedule
+            let servicesHTML = '<h4>Platform Access and Services</h4>';
+            servicesHTML += '<p>The Client shall have access to the following services:</p>';
+            servicesHTML += '<ol style="margin-left: 20px;">';
             
-            // Add all selected platforms
+            // Add user plan details
+            servicesHTML += `<li><strong>${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} User Plan</strong><br>`;
+            servicesHTML += `<ul style="margin-left: 20px;">`;
+            servicesHTML += `<li>${userCount} user licenses with full platform access</li>`;
+            servicesHTML += `<li>Web portal for job management and administration</li>`;
+            servicesHTML += `<li>Mobile application access for field engineers</li>`;
+            servicesHTML += `<li>Real-time job tracking and reporting</li>`;
+            servicesHTML += `<li>Document management and storage</li>`;
+            servicesHTML += `</ul></li>`;
+            
+            // Add platform-specific services
             selectedPlatformsList.forEach(([platform, tier]) => {
                 const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
-                saasServices.push(`${platformName} Platform Access - Up to ${tier} jobs per month`);
+                const platformDesc = document.querySelector(`[data-platform="${platform}"] .platform-description`).textContent;
+                servicesHTML += `<li style="margin-top: 10px;"><strong>${platformName}</strong><br>`;
+                servicesHTML += `<ul style="margin-left: 20px;">`;
+                servicesHTML += `<li>${platformDesc}</li>`;
+                servicesHTML += `<li>Up to ${tier} jobs per month</li>`;
+                servicesHTML += `<li>Automated workflow management</li>`;
+                servicesHTML += `<li>Compliance tracking and reporting</li>`;
+                servicesHTML += `</ul></li>`;
             });
-
-            document.getElementById('saasServices').innerHTML = 
-                saasServices.map(s => `<li>${s}</li>`).join('');
-
+            
+            servicesHTML += '</ol>';
+            
+            servicesHTML += '<h4 style="margin-top: 20px;">Support Services</h4>';
+            servicesHTML += '<ul style="margin-left: 20px;">';
+            servicesHTML += '<li>Email support during business hours (9 am–5 pm UK time)</li>';
+            servicesHTML += '<li>Access to knowledge base and documentation</li>';
+            servicesHTML += '<li>Regular platform updates and enhancements</li>';
+            servicesHTML += '<li>Monthly usage reports</li>';
+            servicesHTML += '</ul>';
+            
+            document.getElementById('saasServicesDetailed').innerHTML = servicesHTML;
+            
             // Set SaaS term
             const saasTerm = isAnnual ? 
-                'This agreement commences on the date above and continues for an initial period of 12 months.' :
-                'This agreement commences on the date above and continues on a rolling monthly basis.';
+                '2.1 This agreement commences on the date above and continues for an initial period of 12 months.' :
+                '2.1 This agreement commences on the date above and continues on a rolling monthly basis.';
             document.getElementById('saasTerm').textContent = saasTerm;
 
             // Set SaaS fees (excluding professional services)
             const userPrice = prices[selectedPlan];
             
             let saasFeesHTML = `
-                <p><strong>Monthly Recurring Charges:</strong></p>
+                <p><strong>3.1 Monthly Recurring Charges:</strong></p>
                 <p>User Licenses: £${userPrice} per user per ${period} x ${userCount} users = £${(userPrice * userCount).toLocaleString()} per ${period}</p>
             `;
             
@@ -1518,26 +1885,26 @@
             });
 
             const totalSaaSCost = (userPrice * userCount) + totalPlatformCost;
-            saasFeesHTML += `<p><strong>Total Monthly SaaS Fee: £${totalSaaSCost.toLocaleString()} per ${period}</strong></p>`;
+            saasFeesHTML += `<p><strong>3.2 Total Monthly SaaS Fee: £${totalSaaSCost.toLocaleString()} per ${period}</strong></p>`;
             
             // Add billing frequency note
             if (pricingModel === 'payg') {
-                saasFeesHTML += `<p>Billing: Monthly in arrears based on actual usage.</p>`;
+                saasFeesHTML += `<p>3.3 Billing: Monthly in arrears based on actual usage.</p>`;
             } else if (pricingModel === 'monthly') {
-                saasFeesHTML += `<p>Billing: Monthly in advance (20% discount applied).</p>`;
+                saasFeesHTML += `<p>3.3 Billing: Monthly in advance (20% discount applied).</p>`;
             } else if (pricingModel === 'annual') {
-                saasFeesHTML += `<p>Billing: Annual in advance (40% discount applied).</p>`;
+                saasFeesHTML += `<p>3.3 Billing: Annual in advance (40% discount applied).</p>`;
                 saasFeesHTML += `<p><strong>Annual Total: £${(totalSaaSCost * 12).toLocaleString()}</strong></p>`;
             }
             
-            saasFeesHTML += `<p>Payment terms: Net 30 days from invoice date.</p>`;
+            saasFeesHTML += `<p>3.4 Payment terms: Net 30 days from invoice date.</p>`;
 
             document.getElementById('saasFees').innerHTML = saasFeesHTML;
 
             // Set SaaS termination clause
             const saasTermination = isAnnual ? 
-                'Either party may terminate this agreement with 30 days written notice at the end of the initial 12-month term. Early termination fees may apply.' :
-                'Either party may terminate this agreement with 30 days written notice.';
+                '11.1 Either party may terminate this agreement with 30 days written notice at the end of the initial 12-month term. Early termination fees may apply.' :
+                '11.1 Either party may terminate this agreement with 30 days written notice.';
             document.getElementById('saasTermination').textContent = saasTermination;
         }
 
@@ -1556,7 +1923,7 @@
             
             // Set short company name (first word or full name if single word)
             const shortName = companyName.split(' ')[0];
-            document.querySelectorAll('#clientCompanyNameShort, #clientCompanyNameShort2, #clientCompanyNameShort3, #clientCompanyNameShort4').forEach(el => {
+            document.querySelectorAll('#clientCompanyNameShort, .clientCompanyNameShort').forEach(el => {
                 el.textContent = shortName;
             });
             
@@ -1671,6 +2038,156 @@
 
             // Recalculate total to reflect discount
             calculateTotal();
+        }
+
+        function generateEmail() {
+            const selectedPlatformsList = Object.entries(selectedPlatforms).filter(([p, tier]) => tier !== null);
+            
+            if (!selectedPlan || selectedPlatformsList.length === 0) {
+                alert('Please select a plan and at least one platform workflow with job volume tier before generating an email');
+                return;
+            }
+
+            const companyName = document.getElementById('companyName').value.trim() || '[Company Name]';
+            const prices = calculatePlanPrices();
+            const userPrice = prices[selectedPlan];
+            const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
+            
+            // Calculate total costs
+            let totalPlatformCost = 0;
+            selectedPlatformsList.forEach(([platform, tier]) => {
+                const { total: platformCost } = calculatePlatformPrice(tier);
+                totalPlatformCost += platformCost;
+            });
+            
+            const totalSaaSCost = (userPrice * userCount) + totalPlatformCost;
+            
+            // Build email content
+            let emailContent = `Dear ${companyName} Team,
+
+Thank you for your interest in the Shocking Energy platform. Following our discussions, I'm pleased to provide you with a comprehensive proposal for our software services${selectedService ? ' and SIP accreditation support' : ''}.
+
+PROPOSED SOLUTION OVERVIEW
+========================
+
+We recommend the following configuration for your organisation:
+
+SOFTWARE PLATFORM
+-----------------
+• Plan: ${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan
+• Users: ${userCount} licenses
+• Billing: ${pricingModel === 'payg' ? 'Pay As You Go' : pricingModel === 'monthly' ? 'Monthly Contract (20% discount)' : 'Annual Contract (40% discount)'}
+
+SELECTED WORKFLOWS
+------------------`;
+
+            selectedPlatformsList.forEach(([platform, tier]) => {
+                const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
+                const platformDesc = document.querySelector(`[data-platform="${platform}"] .platform-description`).textContent;
+                const { pricePerJob } = calculatePlatformPrice(tier);
+                emailContent += `\n• ${platformName} (Up to ${tier} jobs/month at £${pricePerJob.toFixed(2)}/job)\n  - ${platformDesc}`;
+            });
+
+            emailContent += `\n\nPRICING SUMMARY
+===============
+User Licenses: £${(userPrice * userCount).toLocaleString()}/${period}`;
+
+            selectedPlatformsList.forEach(([platform, tier]) => {
+                const platformName = document.querySelector(`[data-platform="${platform}"] .platform-name`).textContent;
+                const { total: platformCost } = calculatePlatformPrice(tier);
+                emailContent += `\n${platformName}: £${platformCost.toLocaleString()}/${period}`;
+            });
+
+            emailContent += `\n\nTotal Monthly Platform Fee: £${totalSaaSCost.toLocaleString()}/${period}`;
+            
+            if (pricingModel === 'annual') {
+                emailContent += `\nTotal Annual Cost: £${(totalSaaSCost * 12).toLocaleString()}`;
+            }
+
+            // Add SIP accreditation if selected
+            if (selectedService) {
+                const service = basePricing.services[selectedService];
+                const discountMultiplier = sipDiscountApplied ? 0.9 : 1;
+                const discountText = sipDiscountApplied ? ' (10% discount applied)' : '';
+                
+                emailContent += `\n\nSIP ACCREDITATION SUPPORT
+=========================`;
+                
+                if (selectedService === 'upfront') {
+                    const cost = Math.round(service.totalCost * discountMultiplier);
+                    emailContent += `\nOne-time fee: £${cost.toLocaleString()}${discountText}`;
+                } else {
+                    const monthlyRate = Math.round(service.monthlyRate * discountMultiplier);
+                    const total = monthlyRate * service.months;
+                    emailContent += `\n${service.months}-month programme: £${monthlyRate.toLocaleString()}/month${discountText}`;
+                    emailContent += `\nTotal cost: £${total.toLocaleString()}`;
+                }
+                
+                emailContent += `\n\nThis comprehensive support package includes:
+• Initial assessment and gap analysis
+• Documentation development and review
+• Process implementation support
+• Training for key personnel
+• Mock audits and preparation
+• Ongoing support throughout the accreditation process`;
+            }
+
+            emailContent += `\n\nKEY BENEFITS
+============
+• Industry-leading platform for job management and compliance
+• Real-time visibility of all operations
+• Mobile app for field engineers
+• Automated workflow management
+• Comprehensive reporting and analytics
+• UK-based support team
+• Regular platform updates and enhancements
+
+NEXT STEPS
+==========
+1. Review the attached contract(s)
+2. Sign and return the agreements
+3. We'll schedule your onboarding session
+4. Platform access will be provided within 24 hours
+
+I've attached the formal agreement(s) for your review. Please don't hesitate to contact me if you have any questions or would like to discuss any aspect of this proposal.
+
+I look forward to welcoming ${companyName} to the Shocking Energy platform and supporting your operational excellence.
+
+Best regards,
+
+[Your Name]
+[Your Title]
+Shocking Energy Limited
+Email: [Your Email]
+Phone: [Your Phone]
+Web: www.shockingenergy.com`;
+
+            // Update email preview
+            document.getElementById('emailClientName').textContent = companyName;
+            document.getElementById('emailBody').textContent = emailContent;
+            
+            // Show email preview
+            document.getElementById('emailPreview').style.display = 'block';
+            document.getElementById('emailPreview').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyEmail() {
+            const emailContent = document.getElementById('emailBody').textContent;
+            
+            // Create a temporary textarea to copy the content
+            const textarea = document.createElement('textarea');
+            textarea.value = emailContent;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('Email copied to clipboard!');
+            } catch (err) {
+                alert('Failed to copy email. Please select and copy manually.');
+            }
+            
+            document.body.removeChild(textarea);
         }
     </script>
 </body>
