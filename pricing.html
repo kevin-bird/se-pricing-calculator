@@ -879,32 +879,6 @@
                 <h2 class="section-title">5. SIP Accreditation (Optional)</h2>
                 <p>SIP Accreditation Support Services</p>
                 
-                <!-- Company Details Form -->
-                <div id="companyDetailsForm" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: none;">
-                    <h3 style="margin-bottom: 15px; color: #333;">Company Details</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Company Name:</label>
-                            <input type="text" id="companyName" placeholder="Enter company name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
-                        </div>
-                        <div>
-                            <button type="button" id="lookupCompany" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 25px;">
-                                Lookup Company Details
-                            </button>
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Company Number:</label>
-                            <input type="text" id="companyNumber" placeholder="Company number" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Registered Address:</label>
-                            <textarea id="registeredAddress" placeholder="Registered address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; min-height: 60px; resize: vertical;"></textarea>
-                        </div>
-                    </div>
-                </div>
-                
                 <div style="text-align: center; margin-bottom: 20px;">
                     <button class="btn" id="sipDiscountBtn" onclick="toggleSipDiscount()" style="background: #ff6b35; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
                         Apply 10% Discount
@@ -942,6 +916,37 @@
                         <div class="service-total">
                             <span class="original-total">Total: £18,000</span>
                             <span class="discounted-total" style="display: none;">Total: £16,200</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Details Section -->
+            <div class="company-details-section" style="margin-top: 40px;">
+                <h2 class="section-title">6. Company Details</h2>
+                <p style="margin-bottom: 20px; color: #666;">Enter your company details for the contract</p>
+                
+                <!-- Company Details Form -->
+                <div id="companyDetailsForm" style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Company Name:</label>
+                            <input type="text" id="companyName" placeholder="Enter company name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <button type="button" id="lookupCompany" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 25px;">
+                                Lookup Company Details
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Company Number:</label>
+                            <input type="text" id="companyNumber" placeholder="Company number (e.g., 12345678)" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Registered Address:</label>
+                            <textarea id="registeredAddress" placeholder="Registered address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; min-height: 60px; resize: vertical;"></textarea>
                         </div>
                     </div>
                 </div>
@@ -1281,14 +1286,10 @@
                     if (this.classList.contains('selected')) {
                         this.classList.remove('selected');
                         selectedService = null;
-                        // Hide company details form
-                        document.getElementById('companyDetailsForm').style.display = 'none';
                     } else {
                         document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
                         this.classList.add('selected');
                         selectedService = this.dataset.service;
-                        // Show company details form
-                        document.getElementById('companyDetailsForm').style.display = 'block';
                     }
                     calculateTotal();
                 });
@@ -1426,15 +1427,33 @@
                 return;
             }
 
+            // Get company details (use defaults if not provided)
+            let companyName = '[Your Company]';
+            let companyNumber = '[Company Number]';
+            let registeredAddress = '[Registered Address]';
+            
             // Check if SIP service is selected and company details are provided
             if (selectedService) {
-                const companyName = document.getElementById('companyName').value.trim();
-                const companyNumber = document.getElementById('companyNumber').value.trim();
-                const registeredAddress = document.getElementById('registeredAddress').value.trim();
+                const enteredName = document.getElementById('companyName').value.trim();
+                const enteredNumber = document.getElementById('companyNumber').value.trim();
+                const enteredAddress = document.getElementById('registeredAddress').value.trim();
                 
-                if (!companyName || !companyNumber || !registeredAddress) {
+                if (!enteredName || !enteredNumber || !enteredAddress) {
                     alert('Please provide complete company details (name, number, and registered address) for the SIP accreditation contract');
                     return;
+                }
+                
+                // Use the entered details
+                companyName = enteredName;
+                companyNumber = enteredNumber;
+                registeredAddress = enteredAddress;
+            } else {
+                // For SaaS-only contracts, check if any company details were entered
+                const enteredName = document.getElementById('companyName').value.trim();
+                if (enteredName) {
+                    companyName = enteredName;
+                    companyNumber = document.getElementById('companyNumber').value.trim() || companyNumber;
+                    registeredAddress = document.getElementById('registeredAddress').value.trim() || registeredAddress;
                 }
             }
 
@@ -1442,8 +1461,8 @@
             const isAnnual = pricingModel === 'annual';
             const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
 
-            // Always generate SaaS contract (since plan and platforms are required)
-            generateSaaSContract(selectedPlatformsList, prices, isAnnual, period);
+            // Always generate SaaS contract with company details
+            generateSaaSContract(selectedPlatformsList, prices, isAnnual, period, companyName);
 
             // Generate SIP contract only if service is selected
             if (selectedService) {
@@ -1458,7 +1477,10 @@
             document.getElementById('contractPreview').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function generateSaaSContract(selectedPlatformsList, prices, isAnnual, period) {
+        function generateSaaSContract(selectedPlatformsList, prices, isAnnual, period, companyName) {
+            // Update company name in SaaS contract header
+            document.querySelectorAll('.companyName').forEach(el => el.textContent = companyName);
+            
             // Populate SaaS contract services (excluding SIP accreditation)
             const saasServices = [];
             saasServices.push(`${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan - ${userCount} users`);
@@ -1497,6 +1519,17 @@
 
             const totalSaaSCost = (userPrice * userCount) + totalPlatformCost;
             saasFeesHTML += `<p><strong>Total Monthly SaaS Fee: £${totalSaaSCost.toLocaleString()} per ${period}</strong></p>`;
+            
+            // Add billing frequency note
+            if (pricingModel === 'payg') {
+                saasFeesHTML += `<p>Billing: Monthly in arrears based on actual usage.</p>`;
+            } else if (pricingModel === 'monthly') {
+                saasFeesHTML += `<p>Billing: Monthly in advance (20% discount applied).</p>`;
+            } else if (pricingModel === 'annual') {
+                saasFeesHTML += `<p>Billing: Annual in advance (40% discount applied).</p>`;
+                saasFeesHTML += `<p><strong>Annual Total: £${(totalSaaSCost * 12).toLocaleString()}</strong></p>`;
+            }
+            
             saasFeesHTML += `<p>Payment terms: Net 30 days from invoice date.</p>`;
 
             document.getElementById('saasFees').innerHTML = saasFeesHTML;
@@ -1583,49 +1616,24 @@
                 button.textContent = 'Looking up...';
                 button.disabled = true;
 
-                // Note: Companies House API requires API key and has CORS restrictions
-                // For demo purposes, we'll use a free proxy service or implement a simple search
-                // In production, this should be done through your backend service
-
-                // Using a public API (note: this may have limitations)
-                const response = await fetch(`https://api.company-information.service.gov.uk/search/companies?q=${encodeURIComponent(companyName)}&items_per_page=1`, {
-                    headers: {
-                        'Authorization': 'Basic ' + btoa('4d8235f7-b6f2-48a3-bace-1eda568597f4:'),
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Company lookup service unavailable');
-                }
-
-                const data = await response.json();
+                // For security reasons, the Companies House API cannot be called directly from the browser
+                // This would require a backend service to handle the API key securely
                 
-                if (data.items && data.items.length > 0) {
-                    const company = data.items[0];
-                    
-                    // Populate company details
-                    document.getElementById('companyNumber').value = company.company_number || '';
-                    
-                    // Format address
-                    const address = company.address;
-                    const addressParts = [];
-                    if (address.premises) addressParts.push(address.premises);
-                    if (address.address_line_1) addressParts.push(address.address_line_1);
-                    if (address.address_line_2) addressParts.push(address.address_line_2);
-                    if (address.locality) addressParts.push(address.locality);
-                    if (address.region) addressParts.push(address.region);
-                    if (address.postal_code) addressParts.push(address.postal_code);
-                    if (address.country) addressParts.push(address.country);
-                    
-                    document.getElementById('registeredAddress').value = addressParts.join(', ');
-                    
-                    alert('Company details found and populated!');
-                } else {
-                    alert('No company found with that name. Please enter details manually.');
-                }
+                // Simulate a delay to show the loading state
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Since this is a static site, provide a helpful message
+                alert('Company lookup is currently unavailable on the static site version.\n\n' +
+                      'Please enter the company details manually:\n' +
+                      '• Company Name\n' +
+                      '• Company Number\n' +
+                      '• Registered Address\n\n' +
+                      'You can find these details at:\n' +
+                      'https://find-and-update.company-information.service.gov.uk/');
+                      
             } catch (error) {
                 console.error('Company lookup error:', error);
-                alert('Company lookup failed. Please enter details manually.\n\nNote: This feature requires a Companies House API key for full functionality.');
+                alert('Company lookup failed. Please enter details manually.');
             } finally {
                 // Reset button state
                 const button = document.getElementById('lookupCompany');
