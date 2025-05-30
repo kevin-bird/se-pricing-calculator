@@ -1172,7 +1172,10 @@
             });
 
             // Set default date
-            document.getElementById('contractDate').textContent = new Date().toLocaleDateString('en-GB');
+            const contractDateElements = document.querySelectorAll('.contractDate');
+            contractDateElements.forEach(element => {
+                element.textContent = new Date().toLocaleDateString('en-GB');
+            });
             
             // Initial setup
             updatePrices();
@@ -1301,20 +1304,22 @@
                 services.push('SIP Accreditation Professional Services');
             }
 
-            document.getElementById('contractServices').innerHTML = 
+            document.getElementById('saasServices').innerHTML = 
                 services.map(s => `<li>${s}</li>`).join('');
 
             // Set term
+            const isAnnual = pricingModel === 'annual';
             const term = isAnnual ? 
                 'This agreement commences on the date above and continues for an initial period of 12 months.' :
                 'This agreement commences on the date above and continues on a rolling monthly basis.';
-            document.getElementById('contractTerm').textContent = term;
+            document.getElementById('saasTerm').textContent = term;
 
             // Set fees
-            const userPrice = prices[selectedPlan][isAnnual ? 'annual' : 'monthly'];
+            const userPrice = prices[selectedPlan];
+            const period = pricingModel === 'payg' ? 'month' : (pricingModel === 'monthly' ? 'month' : 'year');
             
             let feesHTML = `
-                <p>User Licenses: £${userPrice} per user per ${isAnnual ? 'year' : 'month'} x ${userCount} users = £${(userPrice * userCount).toLocaleString()} per ${isAnnual ? 'year' : 'month'}</p>
+                <p>User Licenses: £${userPrice} per user per ${period} x ${userCount} users = £${(userPrice * userCount).toLocaleString()} per ${period}</p>
             `;
             
             // Add platform fees
@@ -1336,7 +1341,13 @@
                 }
             }
 
-            document.getElementById('contractFees').innerHTML = feesHTML;
+            document.getElementById('saasFees').innerHTML = feesHTML;
+
+            // Set termination clause
+            const termination = isAnnual ? 
+                'Either party may terminate this agreement with 30 days written notice at the end of the initial 12-month term.' :
+                'Either party may terminate this agreement with 30 days written notice.';
+            document.getElementById('saasTermination').textContent = termination;
 
             // Show contract
             document.getElementById('contractPreview').style.display = 'block';
